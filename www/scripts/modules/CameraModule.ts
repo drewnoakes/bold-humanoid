@@ -91,13 +91,33 @@ class CameraModule extends Module
     private loadLabelTeacher(content: HTMLElement)
     {
         var teacherControlsContainer = <HTMLElement>content.querySelector('div.label-teacher-controls');
+        var settingNames :String[];
 
-        control.buildSettings('label-teacher', teacherControlsContainer, this.closeables);
+        var createControl = settingName =>
+            {
+                control.createSettingControl(control.getSetting('label-teacher.' + settingName), teacherControlsContainer, this.closeables);
+            };
+
+        settingNames = ['label-to-train', 'train-mode', 'use-range'];
+        _.each(settingNames, createControl);
+        teacherControlsContainer.appendChild(document.createElement('br'));
+        settingNames = ['max-flood-diff', 'fixed-range'];
+        _.each(settingNames, createControl);
+        teacherControlsContainer.appendChild(document.createElement('br'));
+        settingNames = ['sigma-range'];
+        _.each(settingNames, createControl);
+        teacherControlsContainer.appendChild(document.createElement('br'));
+
+        //control.buildSettings('label-teacher', teacherControlsContainer, this.closeables);
         control.buildActions('label-teacher', teacherControlsContainer);
 
+        var heading = document.createElement('h3');
+        heading.textContent = 'Ranges';
+        teacherControlsContainer.appendChild(heading);
+
         var labelTeacherInspectorCanvas = <HTMLCanvasElement>content.querySelector('.label-teacher-inspector');
-        this.labelTeacherInspector = new LabelTeacherInspector(labelTeacherInspectorCanvas, 320, 120);
-        this.labelTeacherInspector.setVisible(true);
+        this.labelTeacherInspector = new LabelTeacherInspector(labelTeacherInspectorCanvas, 320, 100);
+        this.labelTeacherInspector.setVisible(false);
         this.labelTeacherInspector.draw();
 
         this.closeables.add(new data.Subscription<any>(
@@ -108,7 +128,9 @@ class CameraModule extends Module
         ));
 
         this.closeables.add(control.getSetting('round-table.image-type').track(type => {
-            teacherControlsContainer.style.display = type === constants.ImageType.Teacher ? 'block' : 'none';
+            var showTeacher = type === constants.ImageType.Teacher;
+            teacherControlsContainer.style.display = showTeacher ? 'block' : 'none';
+            this.labelTeacherInspector.setVisible(showTeacher);
         }));
 
         this.setSeedPointAction = new Action({id: 'label-teacher.set-seed-point', label: 'Set Seed Point', hasArguments: true});

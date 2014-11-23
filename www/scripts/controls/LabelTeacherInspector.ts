@@ -1,3 +1,4 @@
+import ICloseable = require('../ICloseable');
 import HsvRange = require ('../HsvRange');
 import color = require ('../color');
 import control = require ('../control');
@@ -10,6 +11,10 @@ class LabelTeacherInspector
     public hsvRange: any;
     public hsvDist: any;
     public sigmaRange: number;
+    
+    private labelToTrainSetting: Setting;
+    private labelSetting: Setting;
+    private labelSettingTracker: ICloseable;
 
     constructor(private canvas: HTMLCanvasElement, width: number, height: number)
     {
@@ -29,13 +34,25 @@ class LabelTeacherInspector
                             }
                            );
 
+        this.labelToTrainSetting = control.getSetting('label-teacher.label-to-train');
+        this.labelToTrainSetting.track(value =>
+                                       {
+                                           var labelName = this.labelToTrainSetting.enumValues[value].text;
+                                           if (this.labelSettingTracker)
+                                               this.labelSettingTracker.close();
+                                           this.labelSetting = control.getSetting('vision.pixel-labels.' + labelName);
+                                           this.labelSettingTracker = this.labelSetting.track(() =>
+                                                                                              {
+                                                                                                  console.log('heeha!');
+                                                                                                  this.draw();
+                                                                                              });
+                                           console.log('tracker: ' + this.labelSettingTracker);
+                                           this.draw();
+                                       });
     }
 
     public draw()
     {
-        if (!this.hsvRange)
-            return;
-
         var context = this.context;
 
         context.fillStyle = '#000';
@@ -51,6 +68,15 @@ class LabelTeacherInspector
             space = this.canvas.width - gutterWidth;
 
         var y = 0;
+
+        if (!this.labelSetting)
+        {
+            console.log('No label setting, don\'t draw');
+            return;
+        }
+
+        var settingVal = this.labelSetting.value;
+        
         for (var componentIndex = 0; componentIndex < 3; componentIndex++) {
             if (componentIndex != 0) {
                 // Draw horizontal separator line
@@ -63,14 +89,58 @@ class LabelTeacherInspector
             }
 
             var componentName = componentNames[componentIndex];
-
-            var labelData = this.hsvRange[componentName],
-                min = labelData[0],
-                max = labelData[1];
+            y += componentSpacing;
 
             // Text label
             context.fillStyle = 'black';
-            context.fillText('HSV'[componentIndex], 8, y + 12);
+            context.fillText('HSV'[componentIndex], 8, y + 8);
+
+            // Draw current setting value
+            // TODO: this is copied from PixelLabelInspector, put in central module/control?
+            var labelData = settingVal[componentName],
+            min = labelData[0],
+            max = labelData[1];
+
+            console.assert(min >= 0);
+            console.assert(max <= 255);
+
+            if (min < 0)
+                min = 0;
+
+            if (max > 255)
+                max = 255;
+
+            var labelColour = HsvRange.calculateColour(settingVal);
+
+            var drawComponentRange = (y, minValue, maxValue) =>
+                {
+                    var minRatio = minValue / 255,
+                    maxRatio = maxValue / 255,
+                    minX = minRatio * space,
+                    maxX = maxRatio * space;
+
+                    context.fillStyle = labelColour;
+                    context.fillRect(gutterWidth + minX, y, maxX - minX, barHeight);
+                };
+
+            if (min < max) {
+                drawComponentRange(y, min, max);
+            }
+            else {
+                // Deal with the fact that hue wraps around
+                drawComponentRange(y, min, 255);
+                drawComponentRange(y, 0, max);
+            }
+
+            y += barHeight + barSpacing;
+
+            if (!this.hsvRange)
+                continue;
+
+            // Draw train ranges
+            var labelData = this.hsvRange[componentName],
+                min = labelData[0],
+                max = labelData[1];
 
             y += componentSpacing;
 
