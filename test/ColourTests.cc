@@ -177,5 +177,9 @@ TEST (ColourTests, hsvRangeContaining )
   EXPECT_EQ ( Colour::hsvRange(0,64, 128,128, 128,128), range.containing(Colour::hsv(64, 128, 128)) );
   EXPECT_EQ ( Colour::hsvRange(0,128, 128,128, 128,128), range.containing(Colour::hsv(128, 128, 128)) );
   EXPECT_EQ ( Colour::hsvRange(192,1, 128,128, 128,128), range.containing(Colour::hsv(192, 128, 128)) );
-  
+
+  range = Colour::hsvRange(128,128, 128,128, 128,128);
+  EXPECT_EQ ( Colour::hsvRange(64,128, 128,128, 128,128), range.containing(Colour::hsv(64, 128, 128)) );
+  EXPECT_EQ ( Colour::hsvRange(128,192, 128,128, 128,128), range.containing(Colour::hsv(192, 128, 128)) );
+
 }
