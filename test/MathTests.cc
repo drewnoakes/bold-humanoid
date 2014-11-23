@@ -250,6 +250,17 @@ TEST(MathTests, normaliseRads)
   EXPECT_NEAR ( 0, Math::normaliseRads(6*M_PI), 0.0001 );
 }
 
+TEST(MathTests, angleDiffRads)
+{
+  EXPECT_NEAR ( 0.0, Math::angleDiffRads(M_PI, M_PI), 0.0001 );
+  EXPECT_NEAR ( 0.25 * M_PI, Math::angleDiffRads(0, 0.25 * M_PI), 0.0001 );
+  EXPECT_NEAR ( 0.25 * M_PI, Math::angleDiffRads(1.75 * M_PI, 0), 0.0001 );
+  EXPECT_NEAR ( M_PI, Math::angleDiffRads(.25 * M_PI, 1.25 * M_PI), 0.0001 );
+  EXPECT_NEAR ( M_PI, Math::angleDiffRads(1.25 * M_PI, 0.25 * M_PI), 0.0001 );
+  EXPECT_NEAR ( 1.5 * M_PI, Math::angleDiffRads(0, 1.5 * M_PI), 0.0001 );
+  EXPECT_NEAR ( 1.5 * M_PI, Math::angleDiffRads(0.5 * M_PI, 0), 0.0001 );
+}
+
 TEST(MathTests, shortestAngleDiffRads)
 {
   // Assumes input angles are both in range [-PI,PI)

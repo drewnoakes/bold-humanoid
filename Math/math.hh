@@ -82,6 +82,19 @@ namespace bold
       return rads - M_PI;
     }
 
+    /** Angle spanned by rotation between two angles
+     *
+     * The rotation is measured by rotating from @a a1 to @a2 in
+     * positive direction (counter clockwise for right hand system).
+     */
+    static double angleDiffRads(double a1, double a2)
+    {
+      double rads = a2 - a1;
+      if (rads < 0.0)
+        rads += 2.0 * M_PI;
+      return rads;
+    }
+
     /** Absolute distance between two angles in radians
      *
      * e.g.:
@@ -94,12 +107,12 @@ namespace bold
       // The fmod() function computes the floating-point remainder of
       // dividing x by y.  The return value is x - n * y, where n is
       // the quotient of x / y, rounded toward zero to an integer.
-      double d = fmod(a2 - a1, 2*M_PI);
+      double d = fmod(a2 - a1, 2 * M_PI);
 
       d += (d > M_PI)
-        ? -2*M_PI
+        ? -2 * M_PI
         : d <= -M_PI
-          ? 2*M_PI
+          ? 2 * M_PI
           : 0;
 
       return d;
