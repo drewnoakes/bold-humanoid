@@ -160,9 +160,10 @@ namespace bold
     uint8_t currentLabel = 0;
     Run currentRun(0, 0);
 
-    ASSERT(labelData.getLabelledRowCount() > 1);
-
     timer.timeEvent("Clear");
+
+    if (labelData.getLabelledRowCount() == 0)
+      return;
 
     for (auto const& row : labelData)
     {

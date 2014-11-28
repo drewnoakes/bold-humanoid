@@ -1,13 +1,12 @@
 #include "blobdetectpass.hh"
 
-#include "../../SequentialTimer/sequentialtimer.hh"
-
 using namespace bold;
 using namespace std;
 
 map<shared_ptr<PixelLabel>,vector<Blob>> const& BlobDetectPass::detectBlobs(SequentialTimer& timer)
 {
-  ASSERT(d_rowIndices.size() > 1);
+  if (d_rowIndices.size() < 2)
+    return d_blobsDetectedPerLabel;
 
   // For each label that we're configured to look at
   for (auto pixelLabel : d_pixelLabels)
