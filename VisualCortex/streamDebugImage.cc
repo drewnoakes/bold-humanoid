@@ -106,7 +106,7 @@ void VisualCortex::streamDebugImage(cv::Mat& cameraImage, SequentialTimer& t)
           else
             debugImage = trainImage;
 
-          cv::rectangle(debugImage, cv::Rect(0, 0, debugImage.cols, debugImage.rows), cv::Scalar{0, 0, 255});
+          cv::rectangle(debugImage, cv::Rect(0, 0, debugImage.cols, debugImage.rows), cv::Scalar{0, 0, 255}, 3);
         }
       }
     }
