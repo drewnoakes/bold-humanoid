@@ -31,7 +31,8 @@ void PeriodicFieldEdgePass::process(ImageLabelData const& labelData, SequentialT
   for (auto const& row : labelData)
   {
     ushort c = 0;
-    for (auto label = row.begin(); label < row.end(); label += d_period)
+    ushort step = d_period / row.granularity.x();
+    for (auto label = row.begin(); label < row.end(); label += step)
     {
       if (*label == lineLabelId)
       {
