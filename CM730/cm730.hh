@@ -30,23 +30,99 @@ namespace bold
     constexpr uchar BulkRead = 146;   // 0x92
   }
 
+  /** Identifies a value in EEPROM or RAM.
+  * See page 4 in MX28 Technical Specifications PDF for more information.
+  */
+  enum class CM730Table : uchar
+  {
+    MODEL_NUMBER_L    = 0, /// Lowest byte of model number
+    MODEL_NUMBER_H    = 1, /// Highest byte of model number
+    VERSION           = 2, /// Information on the version of firmware
+    ID                = 3, /// ID of CM730
+    BAUD_RATE         = 4, /// Baud Rate of CM730
+    RETURN_DELAY_TIME = 5, /// Return Delay Time
+    RETURN_LEVEL      = 16, /// Status Return Level
+    DXL_POWER         = 24, /// Dynamixel Power
+    LED_PANEL         = 25, /// LED of back panel
+    LED_HEAD_L        = 26, /// Low byte of Head LED
+    LED_HEAD_H        = 27, /// High byte of Head LED
+    LED_EYE_L         = 28, /// Low byte of Eye LED
+    LED_EYE_H         = 29, /// High byte of Eye LED
+    BUTTON            = 30, /// Button
+    GYRO_Z_L          = 38, /// Low byte of Gyro Z-axis
+    GYRO_Z_H          = 39, /// High byte of Gyro Z-axis
+    GYRO_Y_L          = 40, /// Low byte of Gyro Y-axis
+    GYRO_Y_H          = 41, /// High byte of Gyro Y-axis
+    GYRO_X_L          = 42, /// Low byte of Gyro X-axis
+    GYRO_X_H          = 43, /// High byte of Gyro X-axis
+    ACCEL_X_L         = 44, /// Low byte of Accelerometer X-axis
+    ACCEL_X_H         = 45, /// High byte of Accelerometer X-axis
+    ACCEL_Y_L         = 46, /// Low byte of Accelerometer Y-axis
+    ACCEL_Y_H         = 47, /// High byte of Accelerometer Y-axis
+    ACCEL_Z_L         = 48, /// Low byte of Accelerometer Z-axis
+    ACCEL_Z_H         = 49, /// High byte of Accelerometer Z-axis
+    VOLTAGE           = 50, /// Present Voltage
+    LEFT_MIC_L        = 51, /// Low byte of Left Mic. ADC value
+    LEFT_MIC_H        = 52, /// High byte of Left Mic. ADC value
+    ADC2_L            = 53, /// Low byte of ADC 2
+    ADC2_H            = 54, /// High byte of ADC 2
+    ADC3_L            = 55, /// Low byte of ADC 3
+    ADC3_H            = 56, /// High byte of ADC 3
+    ADC4_L            = 57, /// Low byte of ADC 4
+    ADC4_H            = 58, /// High byte of ADC 4
+    ADC5_L            = 59, /// Low byte of ADC 5
+    ADC5_H            = 60, /// High byte of ADC 5
+    ADC6_L            = 61, /// Low byte of ADC 6
+    ADC6_H            = 62, /// High byte of ADC 6
+    ADC7_L            = 63, /// Low byte of ADC 7
+    ADC7_H            = 64, /// High byte of ADC 7
+    ADC8_L            = 65, /// Low byte of ADC 8
+    ADC8_H            = 66, /// High byte of ADC 8
+    RIGHT_MIC_L       = 67, /// Low byte of Right Mic. ADC value
+    RIGHT_MIC_H       = 68, /// High byte of Right Mic. ADC value
+    ADC10_L           = 69, /// Low byte of ADC 9
+    ADC10_H           = 70, /// High byte of ADC 9
+    ADC11_L           = 71, /// Low byte of ADC 10
+    ADC11_H           = 72, /// High byte of ADC 10
+    ADC12_L           = 73, /// Low byte of ADC 11
+    ADC12_H           = 74, /// High byte of ADC 11
+    ADC13_L           = 75, /// Low byte of ADC 12
+    ADC13_H           = 76, /// High byte of ADC 12
+    ADC14_L           = 77, /// Low byte of ADC 13
+    ADC14_H           = 78, /// High byte of ADC 13
+    ADC15_L           = 79, /// Low byte of ADC 14
+    ADC15_H           = 80, /// High byte of ADC 14
+    MAXNUM_ADDRESS
+  };
+
+  inline CM730Table operator-(CM730Table const& a, CM730Table const& b)
+  {
+    return (CM730Table)((uchar)a - (uchar)b);
+  }
+
   class BulkReadTable
   {
   public:
     BulkReadTable();
 
-    uchar readByte(uchar address) const;
-    ushort readWord(uchar address) const;
+    inline uchar readByte(MX28Table address)  const { return readByte((uchar)address); }
+    inline uchar readByte(CM730Table address) const { return readByte((uchar)address); }
+    inline ushort readWord(MX28Table address)  const { return readWord((uchar)address); };
+    inline ushort readWord(CM730Table address) const { return readWord((uchar)address); };
+
     uchar getStartAddress() const { return d_startAddress; }
     void setStartAddress(uchar address) { d_startAddress = address; }
-    uint getLength() const { return d_length; }
-    void setLength(uint length) { d_length = length; }
+    uchar getLength() const { return d_length; }
+    void setLength(uchar length) { d_length = length; }
     uchar* getData() { return d_table.data(); }
 
   private:
+    uchar readByte(uchar address) const;
+    ushort readWord(uchar address) const;
+
     uchar d_startAddress;
-    uint d_length;
-    std::array<uchar,MX28::MAXNUM_ADDRESS> d_table;
+    uchar d_length;
+    std::array<uchar,(uchar)MX28Table::MAXNUM_ADDRESS> d_table;
   };
 
   class BulkRead
@@ -90,71 +166,6 @@ namespace bold
   class CM730
   {
   public:
-    /** Identifies a value in EEPROM or RAM.
-     * See page 4 in MX28 Technical Specifications PDF for more information.
-     */
-    enum
-    {
-      P_MODEL_NUMBER_L    = 0, /// Lowest byte of model number
-      P_MODEL_NUMBER_H    = 1, /// Highest byte of model number
-      P_VERSION           = 2, /// Information on the version of firmware
-      P_ID                = 3, /// ID of CM730
-      P_BAUD_RATE         = 4, /// Baud Rate of CM730
-      P_RETURN_DELAY_TIME = 5, /// Return Delay Time
-      P_RETURN_LEVEL      = 16, /// Status Return Level
-      P_DXL_POWER         = 24, /// Dynamixel Power
-      P_LED_PANEL         = 25, /// LED of back panel
-      P_LED_HEAD_L        = 26, /// Low byte of Head LED
-      P_LED_HEAD_H        = 27, /// High byte of Head LED
-      P_LED_EYE_L         = 28, /// Low byte of Eye LED
-      P_LED_EYE_H         = 29, /// High byte of Eye LED
-      P_BUTTON            = 30, /// Button
-      P_GYRO_Z_L          = 38, /// Low byte of Gyro Z-axis
-      P_GYRO_Z_H          = 39, /// High byte of Gyro Z-axis
-      P_GYRO_Y_L          = 40, /// Low byte of Gyro Y-axis
-      P_GYRO_Y_H          = 41, /// High byte of Gyro Y-axis
-      P_GYRO_X_L          = 42, /// Low byte of Gyro X-axis
-      P_GYRO_X_H          = 43, /// High byte of Gyro X-axis
-      P_ACCEL_X_L         = 44, /// Low byte of Accelerometer X-axis
-      P_ACCEL_X_H         = 45, /// High byte of Accelerometer X-axis
-      P_ACCEL_Y_L         = 46, /// Low byte of Accelerometer Y-axis
-      P_ACCEL_Y_H         = 47, /// High byte of Accelerometer Y-axis
-      P_ACCEL_Z_L         = 48, /// Low byte of Accelerometer Z-axis
-      P_ACCEL_Z_H         = 49, /// High byte of Accelerometer Z-axis
-      P_VOLTAGE           = 50, /// Present Voltage
-      P_LEFT_MIC_L        = 51, /// Low byte of Left Mic. ADC value
-      P_LEFT_MIC_H        = 52, /// High byte of Left Mic. ADC value
-      P_ADC2_L            = 53, /// Low byte of ADC 2
-      P_ADC2_H            = 54, /// High byte of ADC 2
-      P_ADC3_L            = 55, /// Low byte of ADC 3
-      P_ADC3_H            = 56, /// High byte of ADC 3
-      P_ADC4_L            = 57, /// Low byte of ADC 4
-      P_ADC4_H            = 58, /// High byte of ADC 4
-      P_ADC5_L            = 59, /// Low byte of ADC 5
-      P_ADC5_H            = 60, /// High byte of ADC 5
-      P_ADC6_L            = 61, /// Low byte of ADC 6
-      P_ADC6_H            = 62, /// High byte of ADC 6
-      P_ADC7_L            = 63, /// Low byte of ADC 7
-      P_ADC7_H            = 64, /// High byte of ADC 7
-      P_ADC8_L            = 65, /// Low byte of ADC 8
-      P_ADC8_H            = 66, /// High byte of ADC 8
-      P_RIGHT_MIC_L       = 67, /// Low byte of Right Mic. ADC value
-      P_RIGHT_MIC_H       = 68, /// High byte of Right Mic. ADC value
-      P_ADC10_L           = 69, /// Low byte of ADC 9
-      P_ADC10_H           = 70, /// High byte of ADC 9
-      P_ADC11_L           = 71, /// Low byte of ADC 10
-      P_ADC11_H           = 72, /// High byte of ADC 10
-      P_ADC12_L           = 73, /// Low byte of ADC 11
-      P_ADC12_H           = 74, /// High byte of ADC 11
-      P_ADC13_L           = 75, /// Low byte of ADC 12
-      P_ADC13_H           = 76, /// High byte of ADC 12
-      P_ADC14_L           = 77, /// Low byte of ADC 13
-      P_ADC14_H           = 78, /// High byte of ADC 13
-      P_ADC15_L           = 79, /// Low byte of ADC 14
-      P_ADC15_H           = 80, /// High byte of ADC 14
-      MAXNUM_ADDRESS
-    };
-
     /// ID of CM730 sub-controller
     static constexpr uchar ID_CM = 200;
 
@@ -240,9 +251,11 @@ namespace bold
     /// Restores the state of the specified Dynamixel to the factory default setting.
     CommResult reset(uchar id);
 
-
     /// Reads a byte from the CM730 control table. Returns communication result enum value.
-    CommResult readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error);
+    CommResult readByte(CM730Table address, uchar *value, MX28Alarm* error);
+
+    /// Reads a byte from the specified dynamixel device. Returns communication result enum value.
+    CommResult readByte(uchar id, MX28Table address, uchar *value, MX28Alarm* error);
 
     /// Reads two bytes from the CM730 control table. Returns communication result enum value.
     CommResult readWord(uchar id, uchar address, ushort *pValue, MX28Alarm* error);
@@ -253,12 +266,17 @@ namespace bold
     // Executes a bulk read operation, as specified in bulkRead. Returns communication result enum value.
     CommResult bulkRead(BulkRead* bulkRead);
 
-
     /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeByte(uchar id, uchar address, uchar value, MX28Alarm* error);
+    CommResult writeByte(uchar id, MX28Table address, uchar value, MX28Alarm* error);
+
+    /// Writes a byte into the control table for the CM730. Returns communication result enum value.
+    CommResult writeByte(CM730Table address, uchar value, MX28Alarm* error);
 
     /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
-    CommResult writeWord(uchar id, uchar address, ushort value, MX28Alarm* error);
+    CommResult writeWord(uchar id, MX28Table address, ushort value, MX28Alarm* error);
+
+    /// Writes two bytes into the control table for the CM730. Returns communication result enum value.
+    CommResult writeWord(CM730Table address, ushort value, MX28Alarm* error);
 
     /** Simultaneously write consecutive table values to one ore more devices.
      *
@@ -280,6 +298,15 @@ namespace bold
     CommResult syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar deviceCount, uchar *parameters);
 
   private:
+    /// Reads a byte from the specified dynamixel device. Returns communication result enum value.
+    CommResult readByte(uchar id, uchar address, uchar *value, MX28Alarm* error);
+
+    /// Writes a byte into the control table for the specified Dynamixel device. Returns communication result enum value.
+    CommResult writeByte(uchar id, uchar address, uchar value, MX28Alarm* error);
+
+    /// Writes two bytes into the control table for the specified Dynamixel device. Returns communication result enum value.
+    CommResult writeWord(uchar id, uchar address, ushort value, MX28Alarm* error);
+
     std::unique_ptr<CM730Platform> d_platform;
     bool d_isPowerEnableRequested;
 

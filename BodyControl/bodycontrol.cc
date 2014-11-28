@@ -61,8 +61,8 @@ void JointControl::setValue(ushort value)
     return;
   d_value = value;
   d_degrees = MX28::value2Degs(value);
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_H);
 }
 
 void JointControl::setDegrees(double degrees)
@@ -73,22 +73,22 @@ void JointControl::setDegrees(double degrees)
   if (d_value == value)
     return;
   d_value = value;
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_H);
 }
 
 void JointControl::setRadians(double radians) { setDegrees(Math::radToDeg(radians)); }
 
-void JointControl::setPGain(uchar p) { if (d_pGain == p) return; d_pGain = p; d_changedAddressRange.expand(MX28::P_P_GAIN); }
-void JointControl::setIGain(uchar i) { if (d_iGain == i) return; d_iGain = i; d_changedAddressRange.expand(MX28::P_I_GAIN); }
-void JointControl::setDGain(uchar d) { if (d_dGain == d) return; d_dGain = d; d_changedAddressRange.expand(MX28::P_D_GAIN); }
+void JointControl::setPGain(uchar p) { if (d_pGain == p) return; d_pGain = p; d_changedAddressRange.expand(MX28Table::P_GAIN); }
+void JointControl::setIGain(uchar i) { if (d_iGain == i) return; d_iGain = i; d_changedAddressRange.expand(MX28Table::I_GAIN); }
+void JointControl::setDGain(uchar d) { if (d_dGain == d) return; d_dGain = d; d_changedAddressRange.expand(MX28Table::D_GAIN); }
 
 void JointControl::setPidGains(uchar p, uchar i, uchar d) { setPGain(p); setIGain(i); setDGain(d); }
 
 void JointControl::notifyOffsetChanged()
 {
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_H);
 }
 
 void JointControl::setModulationOffset(short delta)
@@ -97,6 +97,6 @@ void JointControl::setModulationOffset(short delta)
     return;
 
   d_modulationOffset = delta;
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_L);
-  d_changedAddressRange.expand(MX28::P_GOAL_POSITION_H);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_L);
+  d_changedAddressRange.expand(MX28Table::GOAL_POSITION_H);
 }

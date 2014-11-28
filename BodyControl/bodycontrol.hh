@@ -4,6 +4,7 @@
 #include "../JointId/jointid.hh"
 #include "../Math/math.hh"
 #include "../util/Range.hh"
+#include "../MX28/mx28.hh"
 
 #include <memory>
 
@@ -39,7 +40,7 @@ namespace bold
     /// Gets the target angle, in radians
     double getRadians() { return Math::degToRad(getDegrees()); }
 
-    Range<int> getModifiedAddressRange() const { return d_changedAddressRange; }
+    Range<MX28Table> getModifiedAddressRange() const { return d_changedAddressRange; }
     bool isDirty() const { return !d_changedAddressRange.isEmpty(); }
     void clearDirty() { d_changedAddressRange.reset(); }
 
@@ -63,7 +64,7 @@ namespace bold
     uchar d_pGain;
     uchar d_iGain;
     uchar d_dGain;
-    Range<int> d_changedAddressRange;
+    Range<MX28Table> d_changedAddressRange;
   };
 
   class ArmSection;

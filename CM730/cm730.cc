@@ -95,7 +95,7 @@ BulkReadTable::BulkReadTable()
 
 uchar BulkReadTable::readByte(uchar address) const
 {
-  ASSERT(address >= d_startAddress && address < (d_startAddress + d_length));
+  ASSERT((uchar)address >= (uchar)d_startAddress && (uchar)address < ((uchar)d_startAddress + d_length));
 
   return d_table.at(address);
 }
@@ -104,7 +104,7 @@ ushort BulkReadTable::readWord(uchar address) const
 {
   ASSERT(address >= d_startAddress && address < (d_startAddress + d_length - 1));
 
-  return CM730::makeWord(d_table.at(address), d_table.at(address + 1));
+  return CM730::makeWord(d_table[address], d_table[address + 1]);
 }
 
 //////////
@@ -169,9 +169,9 @@ bool CM730::disconnect()
     MX28Alarm alarm1;
     MX28Alarm alarm2;
     MX28Alarm alarm3;
-    writeWord(CM730::ID_CM, CM730::P_LED_HEAD_L, CM730::color2Value(0, 255, 0), &alarm1);
-    writeWord(CM730::ID_CM, CM730::P_LED_EYE_L,  CM730::color2Value(0,   0, 0), &alarm2);
-    writeByte(CM730::ID_CM, CM730::P_LED_PANEL,  0, &alarm3);
+    writeWord(CM730Table::LED_HEAD_L, CM730::color2Value(0, 255, 0), &alarm1);
+    writeWord(CM730Table::LED_EYE_L,  CM730::color2Value(0,   0, 0), &alarm2);
+    writeByte(CM730Table::LED_PANEL,  0, &alarm3);
 
     MX28Alarm alarm = alarm1.getFlags() | alarm2.getFlags() | alarm3.getFlags();
 
@@ -216,7 +216,7 @@ bool CM730::torqueEnable(bool enable)
   MX28Alarm error;
   for (uchar jointId = (uchar)JointId::MIN; jointId <= (uchar)JointId::MAX; jointId++)
   {
-    auto res = writeByte(jointId, MX28::P_TORQUE_ENABLE, enable ? 1 : 0, &error);
+    auto res = writeByte(jointId, (uchar)MX28Table::TORQUE_ENABLE, enable ? 1 : 0, &error);
 
     if (res != CommResult::SUCCESS)
     {
@@ -241,7 +241,7 @@ bool CM730::isPowerEnabled()
 //
 //   static bool commError = false;
 //
-//   if (readByte(CM730::ID_CM, CM730::P_DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
+//   if (readByte(CM730::ID_CM, CM730Table::DXL_POWER, &value, &alarm) != CommResult::SUCCESS)
 //   {
 //     if (!commError)
 //     {
@@ -269,7 +269,7 @@ bool CM730::powerEnable(bool enable)
   log::info("CM730::powerEnable") << "Turning CM730 power " << (enable ? "on" : "off");
 
   MX28Alarm alarm;
-  if (writeByte(CM730::ID_CM, CM730::P_DXL_POWER, enable ? 1 : 0, &alarm) != CommResult::SUCCESS)
+  if (writeByte(CM730Table::DXL_POWER, enable ? 1 : 0, &alarm) != CommResult::SUCCESS)
   {
     log::error("CM730::powerEnable") << "Comm error turning CM730 power " << (enable ? "on" : "off");
     return false;
@@ -323,6 +323,17 @@ CommResult CM730::reset(uchar id)
   txpacket[LENGTH] = 2;
 
   return txRxPacket(txpacket, rxpacket);
+}
+
+
+CommResult CM730::readByte(CM730Table address, uchar* value, MX28Alarm* error)
+{
+  return readByte(ID_CM, (uchar)address, value, error);
+}
+
+CommResult CM730::readByte(uchar id, MX28Table address, uchar* value, MX28Alarm* error)
+{
+  return readByte(id, (uchar)address, value, error);
 }
 
 CommResult CM730::readByte(uchar id, uchar address, uchar *pValue, MX28Alarm* error)
@@ -418,14 +429,25 @@ CommResult CM730::bulkRead(BulkRead* bulkRead)
   return txRxPacket(bulkRead->getTxPacket(), rxpacket, bulkRead);
 }
 
+
+CommResult CM730::writeByte(uchar id, MX28Table address, uchar value, MX28Alarm* error)
+{
+  ASSERT((uchar)address < (uchar)MX28Table::MAXNUM_ADDRESS);
+  return writeByte(id, (uchar)address, value, error);
+}
+
+CommResult CM730::writeByte(CM730Table address, uchar value, MX28Alarm* error)
+{
+  ASSERT((uchar)address < (uchar)CM730Table::MAXNUM_ADDRESS);
+  return writeByte(ID_CM, (uchar)address, value, error);
+}
+
 CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* error)
 {
   ASSERT(d_platform->isPortOpen());
 
   uchar txpacket[8];
   uchar rxpacket[6];
-
-  ASSERT( (id == ID_CM && address < CM730::MAXNUM_ADDRESS) || (address < MX28::MAXNUM_ADDRESS) );
 
   txpacket[ID]           = id;
   txpacket[INSTRUCTION]  = instruction::Write;
@@ -442,6 +464,19 @@ CommResult CM730::writeByte(uchar id, uchar address, uchar value, MX28Alarm* err
   }
 
   return result;
+}
+
+
+CommResult CM730::writeWord(uchar id, MX28Table address, ushort value, MX28Alarm* error)
+{
+  ASSERT((uchar)address < (uchar)MX28Table::MAXNUM_ADDRESS);
+  return writeByte(id, (uchar)address, value, error);
+}
+
+CommResult CM730::writeWord(CM730Table address, ushort value, MX28Alarm* error)
+{
+  ASSERT((uchar)address < (uchar)CM730Table::MAXNUM_ADDRESS);
+  return writeByte(ID_CM, (uchar)address, value, error);
 }
 
 CommResult CM730::writeWord(uchar id, uchar address, ushort value, MX28Alarm* error)
@@ -475,7 +510,7 @@ CommResult CM730::syncWrite(uchar fromAddress, uchar bytesPerDevice, uchar devic
   ASSERT(bytesPerDevice != 0);
   ASSERT(bytesPerDevice - 1 <= 255);
   ASSERT(deviceCount != 0);
-  ASSERT(fromAddress < MX28::MAXNUM_ADDRESS);
+  ASSERT(fromAddress < (uchar)MX28Table::MAXNUM_ADDRESS);
   unsigned paramLength = bytesPerDevice * deviceCount;
   ASSERT(paramLength + 4 <= 255);
   unsigned txSize = 8 + paramLength;
@@ -732,7 +767,7 @@ CommResult CM730::txRxPacket(uchar* txpacket, uchar* rxpacket, BulkRead* bulkRea
       // The number of data bytes is equal to the packet's advertised length, minus two (checksum and length bytes)
       const uchar dataByteCount = packet[LENGTH] - (uchar)2;
 
-      ASSERT(table.getStartAddress() + dataByteCount < MX28::MAXNUM_ADDRESS);
+      ASSERT(table.getStartAddress() + dataByteCount < (uchar)MX28Table::MAXNUM_ADDRESS);
 
       std::copy(
         &packet[PARAMETER],

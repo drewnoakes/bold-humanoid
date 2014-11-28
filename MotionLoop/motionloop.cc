@@ -36,12 +36,12 @@ MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
   d_bodyModel = make_shared<DarwinBodyModel>();
 
   d_dynamicBulkRead = make_unique<BulkRead>(
-    CM730::P_DXL_POWER, CM730::P_VOLTAGE,
-    MX28::P_PRESENT_POSITION_L, MX28::P_PRESENT_TEMPERATURE);
+    (uchar)CM730Table::DXL_POWER, (uchar)CM730Table::VOLTAGE,
+    (uchar)MX28Table::PRESENT_POSITION_L, (uchar)MX28Table::PRESENT_TEMPERATURE);
 
   d_staticBulkRead = make_unique<BulkRead>(
-    CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
-    MX28::P_MODEL_NUMBER_L, MX28::P_LOCK);
+    (uchar)CM730Table::MODEL_NUMBER_L, (uchar)CM730Table::RETURN_LEVEL,
+    (uchar)MX28Table::MODEL_NUMBER_L, (uchar)MX28Table::LOCK);
 
   Config::addAction("hardware.query-static-hardware-state", "Query static HW state", [this] { d_staticHardwareStateUpdateNeeded = true; });
 //   Config::addAction("hardware.cm730-power-on",  "CM730 On",  [this] { d_powerChangeToValue = true;  d_powerChangeNeeded = true; });
@@ -115,7 +115,7 @@ void MotionLoop::initialiseHardwareTables()
 
   const int retryCount = 10;
 
-  auto writeByteWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, uchar address, uchar value)
+  auto writeByteWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, MX28Table address, uchar value)
   {
     // Don't write anything if the value is already set correctly
     if (table.readByte(address) == value)
@@ -148,7 +148,7 @@ void MotionLoop::initialiseHardwareTables()
     }
   };
 
-  auto writeWordWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, uchar address, ushort value)
+  auto writeWordWithRetry = [this,retryCount](BulkReadTable const& table, uchar jointId, MX28Table address, ushort value)
   {
     // Don't write anything if the value is already set correctly
     if (table.readWord(address) == value)
@@ -207,8 +207,8 @@ void MotionLoop::initialiseHardwareTables()
   //
 
   BulkRead eepromBulkRead(
-    CM730::P_MODEL_NUMBER_L, CM730::P_RETURN_LEVEL,
-    MX28::P_MODEL_NUMBER_L, MX28::P_ALARM_SHUTDOWN);
+    (uchar)CM730Table::MODEL_NUMBER_L, (uchar)CM730Table::RETURN_LEVEL,
+    (uchar)MX28Table::MODEL_NUMBER_L, (uchar)MX28Table::ALARM_SHUTDOWN);
 
   while (true)
   {
@@ -250,16 +250,16 @@ void MotionLoop::initialiseHardwareTables()
 
     auto const& table = eepromBulkRead.getBulkReadData(jointId);
 
-    writeByteWithRetry(table, jointId, MX28::P_RETURN_DELAY_TIME, 0);
-    writeByteWithRetry(table, jointId, MX28::P_RETURN_LEVEL, 2);
-    writeWordWithRetry(table, jointId, MX28::P_CW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.min()));
-    writeWordWithRetry(table, jointId, MX28::P_CCW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.max()));
-    writeByteWithRetry(table, jointId, MX28::P_HIGH_LIMIT_TEMPERATURE, MX28::centigrade2Value(tempLimit));
-    writeByteWithRetry(table, jointId, MX28::P_LOW_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.min()));
-    writeByteWithRetry(table, jointId, MX28::P_HIGH_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.max()));
-    writeWordWithRetry(table, jointId, MX28::P_MAX_TORQUE_L, MX28::MAX_TORQUE);
-    writeByteWithRetry(table, jointId, MX28::P_ALARM_LED, alarmLed.getFlags());
-    writeByteWithRetry(table, jointId, MX28::P_ALARM_SHUTDOWN, alarmShutdown.getFlags());
+    writeByteWithRetry(table, jointId, MX28Table::RETURN_DELAY_TIME, 0);
+    writeByteWithRetry(table, jointId, MX28Table::RETURN_LEVEL, 2);
+    writeWordWithRetry(table, jointId, MX28Table::CW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.min()));
+    writeWordWithRetry(table, jointId, MX28Table::CCW_ANGLE_LIMIT_L, MX28::degs2Value(rangeDegs.max()));
+    writeByteWithRetry(table, jointId, MX28Table::HIGH_LIMIT_TEMPERATURE, MX28::centigrade2Value(tempLimit));
+    writeByteWithRetry(table, jointId, MX28Table::LOW_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.min()));
+    writeByteWithRetry(table, jointId, MX28Table::HIGH_LIMIT_VOLTAGE, MX28::voltage2Value(voltageRange.max()));
+    writeWordWithRetry(table, jointId, MX28Table::MAX_TORQUE_L, MX28::MAX_TORQUE);
+    writeByteWithRetry(table, jointId, MX28Table::ALARM_LED, alarmLed.getFlags());
+    writeByteWithRetry(table, jointId, MX28Table::ALARM_SHUTDOWN, alarmShutdown.getFlags());
   }
 
   log::info("MotionLoop::initialiseHardwareTables") << "All MX28 data tables initialised";
@@ -347,7 +347,7 @@ void MotionLoop::onStep(ulong cycleNumber)
 
         ASSERT(bytesToWrite < std::numeric_limits<uchar>::max());
 
-        d_cm730->syncWrite(CM730::P_LED_PANEL, bytesToWrite, 1, parameters);
+        d_cm730->syncWrite((uchar)CM730Table::LED_PANEL, bytesToWrite, 1, parameters);
 
         d_debugControl->clearDirtyFlags();
         t.timeEvent("Write to CM730");
@@ -456,7 +456,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
   //
 
   uchar dirtyDeviceCount = 0;
-  Range<int> addrRange;
+  Range<MX28Table> addrRange;
   for (auto const& joint : d_bodyControl->getJoints())
   {
     if (joint->isDirty())
@@ -469,7 +469,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
   if (dirtyDeviceCount != 0)
   {
     // Prepare the parameters of a SyncWrite instruction
-    int bytesPerDevice = 1 + addrRange.size() + 1;
+    int bytesPerDevice = 1 + (uchar)addrRange.size() + 1;
 
     uchar parameters[dirtyDeviceCount * bytesPerDevice];
     int n = 0;
@@ -479,14 +479,14 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
       {
         parameters[n++] = joint->getId();
 
-        if (addrRange.contains(MX28::P_D_GAIN))   parameters[n++] = joint->getDGain();
-        if (addrRange.contains(MX28::P_I_GAIN))   parameters[n++] = joint->getIGain();
-        if (addrRange.contains(MX28::P_P_GAIN))   parameters[n++] = joint->getPGain();
-        if (addrRange.contains(MX28::P_RESERVED)) parameters[n++] = 0;
+        if (addrRange.contains(MX28Table::D_GAIN))   parameters[n++] = joint->getDGain();
+        if (addrRange.contains(MX28Table::I_GAIN))   parameters[n++] = joint->getIGain();
+        if (addrRange.contains(MX28Table::P_GAIN))   parameters[n++] = joint->getPGain();
+        if (addrRange.contains(MX28Table::RESERVED)) parameters[n++] = 0;
 
-        if (addrRange.contains(MX28::P_GOAL_POSITION_L))
+        if (addrRange.contains(MX28Table::GOAL_POSITION_L))
         {
-          ASSERT(addrRange.contains(MX28::P_GOAL_POSITION_H));
+          ASSERT(addrRange.contains(MX28Table::GOAL_POSITION_H));
 
           // Specify the goal position, and apply any modulation and calibration offset
           int goalPosition = MX28::clampValue(
@@ -509,7 +509,7 @@ bool MotionLoop::writeJointData(SequentialTimer& t)
     // Send the SyncWrite message, if anything changed
     //
 
-    d_cm730->syncWrite(addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
+    d_cm730->syncWrite((uchar)addrRange.min(), bytesPerDevice, dirtyDeviceCount, parameters);
   }
 
   t.timeEvent("Write to MX28s");

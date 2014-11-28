@@ -33,7 +33,7 @@ void MX28HealthChecker::step(unique_ptr<CM730>& cm730, SequentialTimer& t, ulong
 
   CommResult res
     = d_commResultByJointId[d_jointId]
-      = cm730->readByte(d_jointId, MX28::P_TORQUE_ENABLE, &isTorqueEnabled, &alarm);
+      = cm730->readByte(d_jointId, MX28Table::TORQUE_ENABLE, &isTorqueEnabled, &alarm);
 
   if (res == CommResult::SUCCESS)
   {
