@@ -53,15 +53,6 @@ namespace bold
     std::shared_ptr<ButtonObserver> getButtonObserver() const { return d_buttonObserver; }
     std::shared_ptr<Camera> getCamera() const { return d_camera; }
     std::shared_ptr<CameraModel> getCameraModel() const { return d_cameraModel; }
-    std::shared_ptr<DataStreamer> getDataStreamer() const { return d_streamer; }
-    std::shared_ptr<Debugger> getDebugger() const { return d_debugger; }
-    std::shared_ptr<Spatialiser> getSpatialiser() const { return d_spatialiser; }
-    std::shared_ptr<Localiser> getLocaliser() const { return d_localiser; }
-    std::shared_ptr<VisualCortex> getVisualCortex() const { return d_visualCortex; }
-    std::shared_ptr<GameStateReceiver> getGameStateReceiver() const { return d_gameStateReceiver; }
-    std::shared_ptr<OpenTeamCommunicator> getOpenTeamCommunicator() const { return d_teamCommunicator; }
-    std::shared_ptr<RemoteControl> getRemoteControl() const { return d_remoteControl; }
-    std::shared_ptr<RoleDecider> getRoleDecider() const { return d_roleDecider; }
     std::shared_ptr<BehaviourControl> getBehaviourControl() const { return d_behaviourControl; }
 
     std::shared_ptr<HeadModule> getHeadModule() const { return d_headModule; }
@@ -70,9 +61,6 @@ namespace bold
 
     std::shared_ptr<FallDetector const> getFallDetector() const { return d_fallDetector; }
     std::shared_ptr<Voice> getVoice() const { return d_voice; }
-
-    uchar getTeamNumber() const { return d_teamNumber; }
-    uchar getUniformNumber() const { return d_uniformNumber; }
 
     void setOptionTree(std::shared_ptr<OptionTree> tree);
 
