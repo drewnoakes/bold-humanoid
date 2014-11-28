@@ -245,7 +245,7 @@ namespace bold
 
   inline ushort Run::length() const
   {
-    return endX - startX + 1;
+    return endX - startX + (ushort)1;
   }
 
   inline bool Run::overlaps(Run const& b) const
