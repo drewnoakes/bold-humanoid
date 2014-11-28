@@ -65,6 +65,7 @@ namespace bold
 
   private:
     void updateState(cv::Mat const& mask) const;
+    std::vector<Colour::hsv> getSamples(cv::Mat const& mask) const;
 
     static Colour::hsvRange determineRange(std::vector<Colour::hsv> const& samples);
     static std::pair<Colour::hsv, Colour::hsv> determineDistribution(std::vector<Colour::hsv> const& samples);

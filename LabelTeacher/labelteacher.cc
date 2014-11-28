@@ -115,6 +115,15 @@ void LabelTeacher::updateState(cv::Mat const& mask) const
   ASSERT(mask.type() == CV_8UC1);
   ASSERT(d_yuvTrainImage.cols == mask.cols && d_yuvTrainImage.rows == mask.rows);
 
+  auto samples = getSamples(mask);
+  auto range = determineRange(samples);
+  auto distribution = determineDistribution(samples);
+
+  State::make<LabelTeacherState>(range, distribution);
+}
+
+vector<Colour::hsv> LabelTeacher::getSamples(cv::Mat const& mask) const
+{
   vector<Colour::hsv> samples;
   for (int i = 0; i < mask.rows; ++i)
   {
@@ -131,11 +140,7 @@ void LabelTeacher::updateState(cv::Mat const& mask) const
         samples.push_back(hsv);
       }
   }
-  
-  auto range = determineRange(samples);
-  auto distribution = determineDistribution(samples);
-
-  State::make<LabelTeacherState>(range, distribution);
+  return samples;
 }
 
 Colour::hsvRange LabelTeacher::determineRange(const std::vector<Colour::hsv> &samples)
@@ -201,6 +206,29 @@ void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
   auto labelToTrain = d_labels[labelIdx];
   bool reset = d_trainMode->getValue() == TrainMode::Replace;
 
+  auto samples = getSamples(d_mask);
+  auto dist = determineDistribution(samples);
+
+  Eigen::Vector3i hsvMin, hsvMax;
+
+  hsvMin(0) = dist.first.h - d_sigmaRange * dist.second.h;
+  hsvMax(0) = dist.first.h + d_sigmaRange * dist.second.h;
+  hsvMin(1) = dist.first.s - d_sigmaRange * dist.second.s;
+  hsvMax(1) = dist.first.s + d_sigmaRange * dist.second.s;
+  hsvMin(2) = dist.first.v - d_sigmaRange * dist.second.v;
+  hsvMax(2) = dist.first.v + d_sigmaRange * dist.second.v;
+
+  if (hsvMin(0) < 0)
+    hsvMin(0) += 256;
+  if (hsvMax(0) > 255)
+    hsvMax(0) -= 255;
+  hsvMin(1) = max(hsvMin(1), 0);
+  hsvMax(1) = min(hsvMax(1), 255);
+  hsvMin(2) = max(hsvMin(2), 0);
+  hsvMax(2) = min(hsvMax(2), 255);
+
+  auto distRange = Colour::hsvRange(hsvMin(0), hsvMax(0), hsvMin(1), hsvMax(1), hsvMin(2), hsvMax(2));
+
   for (int i = 0; i < mask.rows; ++i)
   {
     uint8_t const* trainImageRow = d_yuvTrainImage.ptr<uint8_t>(i);
@@ -212,6 +240,10 @@ void LabelTeacher::train(unsigned labelIdx, cv::Mat const& mask)
         auto yuv = Colour::YCbCr{trainImageRow[j * 3 + 0], trainImageRow[j * 3 + 1], trainImageRow[j * 3 + 2]};
         auto bgr = yuv.toBgrInt();
         auto hsv = bgr2hsv(bgr);
+
+        if (d_useRange->getValue() == UseRange::XSigmas)
+          if (!distRange.contains(hsv))
+            continue;
 
         if (reset)
         {
