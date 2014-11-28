@@ -62,7 +62,7 @@ namespace bold
     static std::string getAddressName(uchar address);
 
     /** EEPROM and RAM p. 4 in MX28 Technical Specifications PDF
-     * This enum enumerates the addresses. The list depends on the version the MX28.
+     * This enum enumerates the addresses. The list depends on the firmware version of the MX28.
      */
     enum
     {
