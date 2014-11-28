@@ -12,7 +12,7 @@ if [[ $# -eq 0 ]] ; then
 fi
 
 # load common functions
-if [ -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
     echo "BOLD_HUMANOID_DIR" not set
     exit 1
 fi
