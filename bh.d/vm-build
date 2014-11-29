@@ -27,7 +27,7 @@ git fetch --multiple bert                                     \
  && jsonlint -q *.json                                        \
  && touch Version/version.cc Version/version.cc.in            \
  && make -j 2 boldhumanoid                                    \
- && git log -5 --oneline
+ && git --no-pager log -5 --oneline
 
 # if there was an error, propagate it
 if [[ $? -ne 0 ]] ; then
