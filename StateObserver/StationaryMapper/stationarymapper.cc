@@ -22,7 +22,8 @@ void StationaryMapper::observe(SequentialTimer& timer)
 {
   auto const walkState = State::get<WalkState>();
 
-  if (walkState && !walkState->isRunning())
+  // If we're walking, clear the map and return
+  if (walkState && walkState->isRunning())
   {
     if (d_hasData)
     {
