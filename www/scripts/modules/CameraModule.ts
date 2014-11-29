@@ -115,6 +115,8 @@ class CameraModule extends Module
         heading.textContent = 'Ranges';
         teacherControlsContainer.appendChild(heading);
 
+        var labelTeacherContainer = <HTMLDivElement>content.querySelector('div.label-teacher-container');
+
         var labelTeacherInspectorCanvas = <HTMLCanvasElement>content.querySelector('.label-teacher-inspector');
         this.labelTeacherInspector = new LabelTeacherInspector(labelTeacherInspectorCanvas, 320, 100);
         this.labelTeacherInspector.setVisible(false);
@@ -129,7 +131,7 @@ class CameraModule extends Module
 
         this.closeables.add(control.getSetting('round-table.image-type').track(type => {
             var showTeacher = type === constants.ImageType.Teacher;
-            teacherControlsContainer.style.display = showTeacher ? 'block' : 'none';
+            labelTeacherContainer.style.display = showTeacher ? 'block' : 'none';
             this.labelTeacherInspector.setVisible(showTeacher);
         }));
 
