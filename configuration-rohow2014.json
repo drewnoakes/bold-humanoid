@@ -3,6 +3,7 @@
 
   "team-number": 3,
   "team-colour" : 1,
+
   "camera": {
     "settings": {
       "auto-wb": false,
@@ -27,12 +28,14 @@
   "spatialiser": {
     "use-orientation": false
   },
+
   "hardware": {
     "leds": {
       "enable-eyes": true,
       "enable-forehead": true
     }
   },
+
   "vision": {
     "pixel-labels": {
         "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
@@ -48,9 +51,10 @@
       "accepted-width-ratio": [0.1, 5.0]
     },
     "player-detection": {
-      "enable": true
+      "enable": false
     }
   },
+
   "options": {
     "approach-ball": {
       "max-forward-speed": 40.0
