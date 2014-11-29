@@ -115,11 +115,9 @@ endif()
 #
 
 add_class(BOLDHUMANOID
-  ./Agent/Agent.cc
+  ./Agent/agent.cc
   ./Agent/registerStateTypes.cc
   ./Agent/run.cc
-  ./Agent/setOptionTree.cc
-  ./Agent/stop.cc
   ./Agent/think.cc
 )
 
