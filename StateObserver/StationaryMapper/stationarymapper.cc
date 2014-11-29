@@ -44,7 +44,7 @@ void StationaryMapper::observe(SequentialTimer& timer)
 
   ASSERT(agentFrame);
 
-  bool hasData = false;
+  bool hasNewData = false;
 
   // TODO decrease the 'score' of an estimate if it should be seen, but isn't
   //      - use agentFrame->shouldSeeAgentFrameGroundPoint(...) to decrease score of
@@ -54,32 +54,33 @@ void StationaryMapper::observe(SequentialTimer& timer)
   if (agentFrame->isBallVisible())
   {
     integrate(d_ballEstimates, agentFrame->getBallObservation().value().head<2>(), StationaryMapState::BallMergeDistance);
-    hasData = true;
+    hasNewData = true;
   }
 
   for (auto const& goal : agentFrame->getGoalObservations())
   {
     integrate(d_goalEstimates, goal.head<2>(), StationaryMapState::GoalPostMergeDistance);
-    hasData = true;
+    hasNewData = true;
   }
 
   for (auto const& teammate : agentFrame->getTeamMateObservations())
   {
     integrate(d_teammateEstimates, teammate.head<2>(), StationaryMapState::TeammateMergeDistance);
-    hasData = true;
+    hasNewData = true;
   }
 
   // Walk all occlusion rays
   for (auto const& ray : agentFrame->getOcclusionRays())
   {
     d_occlusionMap.add(ray);
-    hasData = true;
+    hasNewData = true;
   }
 
-  if (hasData || !State::get<StationaryMapState>())
+  if (hasNewData || !State::get<StationaryMapState>())
+  {
     updateStateObject();
-
-  d_hasData = hasData;
+    d_hasData |= hasNewData;
+  }
 }
 
 void StationaryMapper::integrate(vector<Average<Vector2d>>& estimates, Vector2d pos, double mergeDistance)
