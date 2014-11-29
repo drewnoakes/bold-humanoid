@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+if [[ $1 == "help" ]] ; then
+    echo "   bh copy-captures N [M...]"
+    echo "          copy all captured image data from the target robot(s) into the local 'remote-captures' folder"
+    exit
+fi
+
+if [[ $# -eq 0 ]] ; then
+    echo "Must specify at least one robot number"
+    exit 1
+fi
+
+# load common functions
+if [ ! -f ${BOLD_HUMANOID_DIR}/bh.d/_functions ]; then
+    echo "BOLD_HUMANOID_DIR" not set
+    exit 1
+fi
+source ${BOLD_HUMANOID_DIR}/bh.d/_functions
+
+remote_copy_captures()
+{
+    mkdir -p $BOLD_HUMANOID_DIR/remote-captures/darwin$1
+
+    scp -C -p darwin@darwin$1.local:captures/* $BOLD_HUMANOID_DIR/remote-captures/darwin$1
+
+    report_result $1 $?
+}
+
+export -f remote_copy_captures
+
+mkdir -p $BOLD_HUMANOID_DIR/remote-captures
+
+parallel -j0 remote_copy_captures ::: ${@:1}
