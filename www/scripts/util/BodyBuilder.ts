@@ -53,7 +53,7 @@ function withDarwinModel(callback: IPartMapCallback)
     {
         isRequestPending = true;
         net.load<IPartMap>(
-            'models/darwin.json',
+            'resources/darwin.json',
             partMap => {
                 parts = partMap;
                 isRequestPending = false;
