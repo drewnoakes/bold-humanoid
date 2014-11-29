@@ -1,0 +1,59 @@
+{
+  "inherits": "configuration-team.json",
+
+  "team-number": 3,
+  "team-colour" : 1,
+  "camera": {
+    "settings": {
+      "auto-wb": false,
+      "exposure-auto": 1,
+      "exposure-absolute": 800,
+      "exposure-auto-priority": false,
+      "backlight-compensation": false,
+      "power-line-frequency": 2,
+      "brightness": 128,
+      "contrast": 32,
+      "saturation": 28,
+      "gain": 200,
+      "wb-temp-k": 4400,
+      "sharpness": 0
+    }
+  },
+
+  "world": {
+    "ball-diameter": 0.1
+  },
+
+  "spatialiser": {
+    "use-orientation": false
+  },
+  "hardware": {
+    "leds": {
+      "enable-eyes": true,
+      "enable-forehead": true
+    }
+  },
+  "vision": {
+    "pixel-labels": {
+        "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
+        "field": { "hue": [60, 120], "sat": [20, 250], "val": [60, 160] },
+        "goal": { "hue": [35, 50], "sat": [140, 255], "val": [100, 150] },
+        "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
+    },
+    "field-edge-pass": {
+      "min-vertical-run-length": 13
+    },
+    "goal-detection": {
+      "max-field-edge-distance-px": 10,
+      "accepted-width-ratio": [0.1, 5.0]
+    },
+    "player-detection": {
+      "enable": true
+    }
+  },
+  "options": {
+    "approach-ball": {
+      "max-forward-speed": 40.0
+    }
+  }
+}
