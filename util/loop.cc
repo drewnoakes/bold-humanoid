@@ -5,7 +5,11 @@ using namespace bold;
 using namespace std;
 
 Loop::Loop(std::string loopName, int schedulePolicy, int priority)
-  : d_loopName(loopName),
+  : d_cycleNumber(0), 
+    d_lastFps(0),
+    d_loopName(loopName),
+    d_isRunning(false),
+    d_isStopRequested(false),
     d_schedulePolicy(schedulePolicy),
     d_priority(priority)
 {
