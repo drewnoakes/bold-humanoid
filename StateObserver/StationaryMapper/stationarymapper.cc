@@ -1,5 +1,6 @@
 #include "stationarymapper.hh"
 
+#include "../../BehaviourControl/behaviourcontrol.hh"
 #include "../../Config/config.hh"
 #include "../../StateObject/AgentFrameState/agentframestate.hh"
 #include "../../Voice/voice.hh"
@@ -9,10 +10,11 @@ using namespace Eigen;
 using namespace rapidjson;
 using namespace std;
 
-StationaryMapper::StationaryMapper(std::shared_ptr<Voice> voice)
+StationaryMapper::StationaryMapper(shared_ptr<Voice> voice, shared_ptr<BehaviourControl> behaviourControl)
 : StateObserver("Stationary Mapper", ThreadId::ThinkLoop),
   d_hasData(false),
-  d_voice(voice)
+  d_voice(voice),
+  d_behaviourControl(behaviourControl)
 {
   d_types.push_back(typeid(AgentFrameState));
   d_types.push_back(typeid(WalkState));
@@ -23,7 +25,7 @@ void StationaryMapper::observe(SequentialTimer& timer)
   auto const walkState = State::get<WalkState>();
 
   // If we're walking, clear the map and return
-  if (walkState && walkState->isRunning())
+  if (d_behaviourControl->getPlayerStatus() != PlayerStatus::Active || (walkState && walkState->isRunning()))
   {
     if (d_hasData)
     {

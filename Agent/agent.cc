@@ -93,7 +93,7 @@ Agent::Agent()
   d_odometer = make_shared<Odometer>(d_walkModule);
   d_orientationTracker = make_shared<OrientationTracker>();
   d_teamCommunicator = make_shared<OpenTeamCommunicator>(d_behaviourControl);
-  auto stationaryMapper = make_shared<StationaryMapper>(d_voice);
+  auto stationaryMapper = make_shared<StationaryMapper>(d_voice, d_behaviourControl);
   auto handlerHelper = make_shared<HandlerHelper>(d_voice, d_behaviourControl);
 
   // Register StateObservers

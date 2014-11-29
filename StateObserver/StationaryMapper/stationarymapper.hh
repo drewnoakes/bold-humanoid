@@ -10,12 +10,13 @@
 
 namespace bold
 {
+  class BehaviourControl;
   class Voice;
 
   class StationaryMapper : public StateObserver
   {
   public:
-    StationaryMapper(std::shared_ptr<Voice> voice);
+    StationaryMapper(std::shared_ptr <Voice> voice, std::shared_ptr <BehaviourControl> behaviourControl);
 
     void observe(SequentialTimer& timer) override;
 
@@ -30,5 +31,6 @@ namespace bold
     RadialOcclusionMap d_occlusionMap;
     bool d_hasData;
     std::shared_ptr<Voice> d_voice;
+    std::shared_ptr<BehaviourControl> d_behaviourControl;
   };
 }
