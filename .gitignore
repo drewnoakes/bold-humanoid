@@ -24,6 +24,7 @@ TAGS
 /cachegrind*
 /drawbridge
 /opencvtest
+/remote-captures
 /remote-logs
 /swig/_bold.so
 /swig/boldpyPYTHON_wrap.cxx
