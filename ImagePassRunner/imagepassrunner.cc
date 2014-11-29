@@ -11,6 +11,7 @@ void ImagePassRunner::addHandler(std::shared_ptr<ImagePassHandler> handler)
 {
   ASSERT(handler);
 
+  lock_guard<mutex> guard(d_handlerMutex);
   if (std::find(d_handlers.begin(), d_handlers.end(), handler) == d_handlers.end())
     d_handlers.insert(handler);
 }
@@ -21,6 +22,7 @@ void ImagePassRunner::removeHandler(std::shared_ptr<ImagePassHandler> handler)
 {
   ASSERT(handler);
 
+  lock_guard<mutex> guard(d_handlerMutex);
   auto it = d_handlers.find(handler);
 
   if (it != d_handlers.end())
@@ -43,6 +45,7 @@ void ImagePassRunner::setHandler(std::shared_ptr<ImagePassHandler> handler, bool
 */
 void ImagePassRunner::pass(ImageLabelData const& labelData, SequentialTimer& timer) const
 {
+  lock_guard<mutex> guard(d_handlerMutex);
   for (auto const& handler : d_handlers)
   {
     timer.enter(handler->id());

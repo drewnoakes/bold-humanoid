@@ -2,6 +2,7 @@
 
 #include <set>
 #include <memory>
+#include <mutex>
 
 namespace bold
 {
@@ -33,5 +34,8 @@ namespace bold
     void pass(ImageLabelData const& labelData, SequentialTimer& timer) const;
 
     std::set<std::shared_ptr<ImagePassHandler>> d_handlers;
+
+  private:
+    mutable std::mutex d_handlerMutex;
   };
 }
