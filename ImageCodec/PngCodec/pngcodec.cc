@@ -75,6 +75,9 @@ bool PngCodec::encode(cv::Mat const& image, vector<unsigned char>& buffer, std::
   // Intel is little-endian
   png_set_swap(png_ptr);
 
+  // Pixel data has BGR order
+  png_set_bgr(png_ptr);
+
   // TODO can avoid setjmp/longjmp (from libpng docs):
   //
   //    If you would rather avoid the complexity of setjmp/longjmp issues, you can compile libpng
@@ -235,7 +238,7 @@ bool PngCodec::read(string filePath, cv::Mat& mat)
   //png_set_palette_to_rgb( png_ptr );
   //png_set_interlace_handling(png_ptr);
 
-  // Convert RGB to BGR
+  // Pixel data has BGR order
   png_set_bgr(png_ptr);
 
   png_read_update_info(png_ptr, info_ptr);
