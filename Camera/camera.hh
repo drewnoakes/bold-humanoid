@@ -80,6 +80,7 @@ namespace bold
         char chars[5];
         for (unsigned i = 0; i < 4; ++i)
           chars[i] = ((pixelFormat >> (i * 8)) & 0xFF);
+        chars[4] = 0;
         return std::string(chars);
       }
     };
