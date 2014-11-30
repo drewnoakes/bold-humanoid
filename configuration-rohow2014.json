@@ -38,10 +38,10 @@
 
   "vision": {
     "pixel-labels": {
-        "ball": { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
+        "ball":  { "hue": [0, 15], "sat": [160, 255], "val": [90, 190] },
         "field": { "hue": [60, 120], "sat": [20, 250], "val": [60, 160] },
-        "goal": { "hue": [35, 50], "sat": [140, 255], "val": [100, 150] },
-        "line": { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
+        "goal":  { "hue": [35, 50], "sat": [140, 255], "val": [100, 150] },
+        "line":  { "hue": [0, 255], "sat": [0, 167], "val": [120, 255] }
     },
     "field-edge-pass": {
       "min-vertical-run-length": 13
