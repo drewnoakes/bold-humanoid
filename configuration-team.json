@@ -175,7 +175,7 @@
     "goal-detection": {
       "min-dimension-px": 3,
       "max-field-edge-distance-px": 30,
-      "accepted-width-ratio": [0.2, 5.0],
+      "accepted-width-ratio": [0.2, 9.0],
       "max-pair-error-dist": 1.25,
       "label": {
         "max-keeper-ball-dist": 0.7
