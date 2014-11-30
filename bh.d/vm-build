@@ -56,10 +56,8 @@ remote_vm_deploy()
                configuration-team.json             \
                configuration-hatfield.json         \
                configuration-drews.json            \
-               configuration-berlin.json           \
                configuration-metadata.json         \
-               configuration-iran-open-2014.json   \
-               configuration-rc2014.json           \
+               configuration-rohow2014.json        \
                darwin@darwin$1.local:
 
     if [ $? -eq 0 ]; then

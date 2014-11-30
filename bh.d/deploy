@@ -28,9 +28,8 @@ remote_deploy()
         motionscripts                                    \
         configuration-team.json                          \
         configuration-hatfield.json                      \
-        configuration-iran-open-2014.json                \
-        configuration-rc2014.json                        \
         configuration-drews.json                         \
+        configuration-rohow2014.json                     \
         configuration-metadata.json                      \
         boldhumanoid.py                                  \
         boldpy                                           \
