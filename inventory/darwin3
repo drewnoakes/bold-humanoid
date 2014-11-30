@@ -1,17 +1,23 @@
-Data as of Thu Jul 24 18:08:02 BST 2014 on darwin3
+Data as of Sun Nov 30 07:42:09 GMT 2014 on darwin3
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
 Release:	13.10
 Codename:	saucy
 
-Filesystem                    Size  Used Avail Use% Mounted on
-/dev/mapper/darwin3--vg-root  2.5G  1.4G  944M  60% /
+==== FILE SYSTEM ========================================
 
-243M	/home/darwin
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/darwin3--vg-root  2.5G  1.7G  672M  72% /
+
+4.0K	/home/darwin/log
+4.0K	/home/darwin/captures
+502M	/home/darwin
 31M	/boot
 
-/etc/network/interfaces
+==== NETWORK ============================================
+
+$ cat /etc/network/interfaces
 
 auto lo
 iface lo inet loopback
@@ -20,7 +26,7 @@ iface eth0 inet static
     address 192.168.123.3
     netmask 255.255.255.0
 
-/etc/hosts
+$ cat /etc/hosts
 
 127.0.0.1	localhost
 127.0.1.1	darwin3
@@ -30,8 +36,39 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
+$ ip addr
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN qlen 1000
+    link/ether 00:01:c0:0c:41:82 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.123.3/24 brd 192.168.123.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::201:c0ff:fe0c:4182/64 scope link 
+       valid_lft forever preferred_lft forever
+3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:0d:f0:95:16:69 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.176.3/24 brd 192.168.176.255 scope global wlan0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20d:f0ff:fe95:1669/64 scope link 
+       valid_lft forever preferred_lft forever
+
+$ ip route
+
+default via 192.168.176.100 dev wlan0 
+192.168.123.0/24 dev eth0  proto kernel  scope link  src 192.168.123.3 
+192.168.176.0/24 dev wlan0  proto kernel  scope link  src 192.168.176.3 
+
+==== AGENT CONFIGURATION ================================
+
+$ cat configuration-agent.json
+
 {
-  "inherits": "configuration-rc2014.json",
+  "inherits": "configuration-bletchley.json",
 
   "uniform-number": 3,
   "player-name": "oberon",
@@ -47,6 +84,213 @@ ff02::2 ip6-allrouters
   }
 }
 
+
+==== SERVICES ===========================================
+
+$ service --status-all
+
+ [ + ]  acpid
+ [ - ]  apparmor
+ [ ? ]  apport
+ [ + ]  atd
+ [ + ]  avahi-daemon
+ [ + ]  console-font
+ [ + ]  console-setup
+ [ + ]  cron
+ [ - ]  dbus
+ [ ? ]  dns-clean
+ [ + ]  friendly-recovery
+ [ - ]  grub-common
+ [ + ]  ipwatchd
+ [ ? ]  irqbalance
+ [ ? ]  killprocs
+ [ + ]  kmod
+ [ ? ]  networking
+ [ + ]  nginx
+ [ ? ]  ondemand
+ [ ? ]  pppd-dns
+ [ - ]  procps
+ [ ? ]  rc.local
+ [ + ]  resolvconf
+ [ + ]  rfkill-restore
+ [ + ]  rfkill-store
+ [ - ]  rsync
+ [ + ]  rsyslog
+ [ ? ]  sendsigs
+ [ + ]  setvtrgb
+ [ - ]  ssh
+ [ - ]  sudo
+ [ - ]  udev
+ [ ? ]  umountfs
+ [ ? ]  umountnfs.sh
+ [ ? ]  umountroot
+ [ - ]  unattended-upgrades
+ [ - ]  urandom
+ [ + ]  wicd
+
+$ initctl list
+
+acpid start/running
+alsa-restore stop/waiting
+alsa-state stop/waiting
+alsa-store stop/waiting
+apport start/running
+atd start/running
+avahi-cups-reload stop/waiting
+avahi-daemon start/running
+boldhumanoid start/running
+bootmisc.sh start/running
+checkfs.sh start/running
+checkroot-bootclean.sh start/running
+checkroot.sh start/running
+console-font stop/waiting
+console-setup stop/waiting
+console stop/waiting
+container-detect stop/waiting
+control-alt-delete stop/waiting
+cron start/running
+dbus start/running
+dmesg stop/waiting
+failsafe stop/waiting
+flush-early-job-log stop/waiting
+friendly-recovery stop/waiting
+hostname stop/waiting
+hwclock-save stop/waiting
+hwclock stop/waiting
+irqbalance stop/waiting
+kmod stop/waiting
+mountall-bootclean.sh start/running
+mountall-net stop/waiting
+mountall-reboot stop/waiting
+mountall-shell stop/waiting
+mountall.sh start/running
+mountall stop/waiting
+mountdevsubfs.sh start/running
+mounted-debugfs stop/waiting
+mounted-dev stop/waiting
+mounted-proc stop/waiting
+mounted-run stop/waiting
+mounted-tmp stop/waiting
+mounted-var stop/waiting
+mountkernfs.sh start/running
+mountnfs-bootclean.sh start/running
+mountnfs.sh start/running
+mtab.sh start/running
+networking start/running
+network-interface-container stop/waiting
+network-interface (eth0) start/running
+network-interface (lo) start/running
+network-interface-security (networking) start/running
+network-interface-security (network-interface/eth0) start/running
+network-interface-security (network-interface/lo) start/running
+network-interface-security (network-interface/wlan0) start/running
+network-interface (wlan0) start/running
+passwd stop/waiting
+plymouth-log stop/waiting
+plymouth-ready stop/waiting
+plymouth-splash stop/waiting
+plymouth-stop stop/waiting
+plymouth stop/waiting
+plymouth-upstart-bridge stop/waiting
+procps stop/waiting
+rcS stop/waiting
+rc stop/waiting
+rc-sysinit stop/waiting
+resolvconf start/running
+rfkill-restore stop/waiting
+rfkill-store stop/waiting
+rsyslog start/running
+screen-cleanup stop/waiting
+setvtrgb stop/waiting
+shutdown stop/waiting
+ssh start/running
+startpar-bridge stop/waiting
+systemd-logind start/running
+tty1 start/running
+tty2 start/running
+tty3 start/running
+tty4 start/running
+tty5 start/running
+tty6 start/running
+udev-fallback-graphics stop/waiting
+udev-finish stop/waiting
+udevmonitor stop/waiting
+udev start/running
+udevtrigger stop/waiting
+ufw start/running
+upstart-file-bridge start/running
+upstart-socket-bridge start/running
+upstart-udev-bridge start/running
+ureadahead-other stop/waiting
+ureadahead stop/waiting
+wait-for-state stop/waiting
+whoopsie start/running
+
+==== LIBRARIES ==========================================
+
+$ ldd boldhumanoid
+
+libasound.so.2 => /usr/lib/i386-linux-gnu/libasound.so.2
+libasyncns.so.0 => /usr/lib/i386-linux-gnu/libasyncns.so.0
+libcrypto.so.1.0.0 => /lib/i386-linux-gnu/libcrypto.so.1.0.0
+libc.so.6 => /lib/i386-linux-gnu/libc.so.6
+libdbus-1.so.3 => /lib/i386-linux-gnu/libdbus-1.so.3
+libdl.so.2 => /lib/i386-linux-gnu/libdl.so.2
+libespeak.so.1 => /usr/lib/i386-linux-gnu/libespeak.so.1
+libfftw3f.so.3 => /usr/lib/i386-linux-gnu/libfftw3f.so.3
+libFLAC.so.8 => /usr/lib/i386-linux-gnu/libFLAC.so.8
+libgcc_s.so.1 => /lib/i386-linux-gnu/libgcc_s.so.1
+libjack.so.0 => /usr/lib/i386-linux-gnu/libjack.so.0
+libjson-c.so.2 => /lib/i386-linux-gnu/libjson-c.so.2
+/lib/ld-linux.so.2
+libm.so.6 => /lib/i386-linux-gnu/libm.so.6
+libnsl.so.1 => /lib/i386-linux-gnu/libnsl.so.1
+libogg.so.0 => /usr/lib/i386-linux-gnu/libogg.so.0
+libopencv_core.so.2.4 => /usr/lib/libopencv_core.so.2.4
+libopencv_imgproc.so.2.4 => /usr/lib/libopencv_imgproc.so.2.4
+libpng12.so.0 => /lib/i386-linux-gnu/libpng12.so.0
+libportaudio.so.2 => /usr/lib/i386-linux-gnu/libportaudio.so.2
+libpthread.so.0 => /lib/i386-linux-gnu/libpthread.so.0
+libpulsecommon-4.0.so => /usr/lib/i386-linux-gnu/pulseaudio/libpulsecommon-4.0.so
+libpulse-simple.so.0 => /usr/lib/i386-linux-gnu/libpulse-simple.so.0
+libpulse.so.0 => /usr/lib/i386-linux-gnu/libpulse.so.0
+libresolv.so.2 => /lib/i386-linux-gnu/libresolv.so.2
+librt.so.1 => /lib/i386-linux-gnu/librt.so.1
+libsigc-2.0.so.0 => /usr/lib/i386-linux-gnu/libsigc-2.0.so.0
+libsndfile.so.1 => /usr/lib/i386-linux-gnu/libsndfile.so.1
+libsonic.so.0 => /usr/lib/i386-linux-gnu/libsonic.so.0
+libssl.so.1.0.0 => /lib/i386-linux-gnu/libssl.so.1.0.0
+libstdc++.so.6 => /usr/lib/i386-linux-gnu/libstdc++.so.6
+libtbb.so.2 => /usr/lib/libtbb.so.2
+libvorbisenc.so.2 => /usr/lib/i386-linux-gnu/libvorbisenc.so.2
+libvorbis.so.0 => /usr/lib/i386-linux-gnu/libvorbis.so.0
+libwrap.so.0 => /lib/i386-linux-gnu/libwrap.so.0
+libXau.so.6 => /usr/lib/i386-linux-gnu/libXau.so.6
+libxcb.so.1 => /usr/lib/i386-linux-gnu/libxcb.so.1
+libXdmcp.so.6 => /usr/lib/i386-linux-gnu/libXdmcp.so.6
+libz.so.1 => /lib/i386-linux-gnu/libz.so.1
+linux-gate.so.1 => 
+
+==== GRUB ===============================================
+
+$ cat /etc/default/grub
+
+GRUB_CMDLINE_LINUX=""
+GRUB_CMDLINE_LINUX_DEFAULT="video=LVDS-1:d"
+GRUB_DEFAULT=0
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_HIDDEN_TIMEOUT_QUIET=true
+GRUB_RECORDFAIL_TIMEOUT=5
+GRUB_TIMEOUT=2
+
+==== KERNEL =============================================
+
+$ cat /etc/sysctl.conf
+
+
+==== PACKAGES ===========================================
+
+$ dpkg-query
 
 accountsservice                         	     420	0.6.34-0ubuntu6
 acpid                                   	     167	1:2.0.18-1ubuntu2
@@ -92,6 +336,7 @@ dbus                                    	    1006	1.6.12-0ubuntu10
 debconf                                 	     613	1.5.50ubuntu1
 debconf-i18n                            	    1100	1.5.50ubuntu1
 debianutils                             	     273	4.4
+debsums                                 	     199	2.0.52+nmu1
 dh-python                               	     303	1.20131003-1
 diffutils                               	     396	1:3.2-8
 dmidecode                               	     155	2.12-2
@@ -216,6 +461,7 @@ libdc1394-22                            	     256	2.2.1-1ubuntu1
 libdevmapper1.02.1                      	     316	2:1.02.77-6ubuntu1
 libdevmapper-event1.02.1                	      86	2:1.02.77-6ubuntu1
 libdns99                                	    1999	1:9.9.3.dfsg.P2-4ubuntu1.1
+libdpkg-perl                            	    1444	1.16.12ubuntu1.3
 libdrm2                                 	     105	2.4.52-1~saucy1
 libedit2                                	     223	3.1-20130712-1
 libelf1                                 	     168	0.157-1ubuntu1.1
@@ -224,6 +470,11 @@ libespeak1                              	     323	1.47.11-1ubuntu0.1
 libevent-2.0-5                          	     318	2.0.21-stable-1
 libexpat1                               	     373	2.1.0-4
 libffi6                                 	      65	3.0.13-4
+libfftw3-3                              	      47	3.3.3-5ubuntu1
+libfftw3-double3                        	    2000	3.3.3-5ubuntu1
+libfftw3-single3                        	    2072	3.3.3-5ubuntu1
+libfile-fcntllock-perl                  	      86	0.14-2
+libfile-fnmatch-perl                    	      74	0.02-1build2
 libflac8                                	     246	1.3.0-1
 libfontconfig1                          	     488	2.10.93-0ubuntu1
 libfreetype6                            	     852	2.4.12-0ubuntu1.1
@@ -247,6 +498,7 @@ libglib2.0-data                         	    1132	2.38.1-0ubuntu1
 libgmp10                                	     572	2:5.1.2+dfsg-2ubuntu1
 libgnutls26                             	    1100	2.12.23-1ubuntu4.3
 libgnutls-openssl27                     	     274	2.12.23-1ubuntu4.3
+libgomp1                                	      96	4.8.1-10ubuntu9
 libgpg-error0                           	      88	1.12-0.2
 libgpm2                                 	      78	1.20.4-6.1
 libgraphite2-3                          	     154	1.2.3-1

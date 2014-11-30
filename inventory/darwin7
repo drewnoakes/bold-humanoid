@@ -1,4 +1,4 @@
-Data as of Fri Nov 28 18:12:32 GMT 2014 on darwin7
+Data as of Sun Nov 30 07:42:11 GMT 2014 on darwin7
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 13.10
@@ -44,13 +44,15 @@ $ ip addr
        valid_lft forever preferred_lft forever
     inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
-2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN qlen 1000
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
     link/ether 00:01:c0:0c:44:be brd ff:ff:ff:ff:ff:ff
     inet 192.168.123.7/24 brd 192.168.123.255 scope global eth0
        valid_lft forever preferred_lft forever
+    inet6 fe80::201:c0ff:fe0c:44be/64 scope link 
+       valid_lft forever preferred_lft forever
 3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
     link/ether 00:0d:f0:95:0e:eb brd ff:ff:ff:ff:ff:ff
-    inet 192.168.176.7/16 brd 192.168.255.255 scope global wlan0
+    inet 192.168.176.7/24 brd 192.168.176.255 scope global wlan0
        valid_lft forever preferred_lft forever
     inet6 fe80::20d:f0ff:fe95:eeb/64 scope link 
        valid_lft forever preferred_lft forever
@@ -58,8 +60,8 @@ $ ip addr
 $ ip route
 
 default via 192.168.176.100 dev wlan0 
-192.168.0.0/16 dev wlan0  proto kernel  scope link  src 192.168.176.7 
 192.168.123.0/24 dev eth0  proto kernel  scope link  src 192.168.123.7 
+192.168.176.0/24 dev wlan0  proto kernel  scope link  src 192.168.176.7 
 
 ==== AGENT CONFIGURATION ================================
 
