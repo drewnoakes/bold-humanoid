@@ -33,6 +33,7 @@ namespace bold
     static int encodePlayerStatus(PlayerStatus status);
 
     void mergePlayerState(PlayerState& state);
+    void updateStateObject();
 
     std::shared_ptr<BehaviourControl> d_behaviourControl;
     const uchar d_teamNumber;
@@ -40,6 +41,7 @@ namespace bold
     const int d_localPort;
     const int d_remotePort;
     Setting<double>* d_sendPeriodSeconds;
+    Setting<int>* d_maxPlayerDataAgeMillis;
     Clock::Timestamp d_lastBroadcast;
     int d_sock;
     std::vector<PlayerState> d_players;

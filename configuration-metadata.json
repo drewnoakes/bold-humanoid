@@ -6,7 +6,8 @@
   "mitecom": {
     "local-port":  { "type": "int", "readonly": true, "min": 1024, "max": 65535 },
     "remote-port": { "type": "int", "readonly": true, "min": 1024, "max": 65535 },
-    "send-period-seconds": { "type": "double", "min": 0.01, "max": 5 }
+    "send-period-seconds": { "type": "double", "min": 0.01, "max": 5 },
+    "max-player-data-age-millis": { "type": "int" }
   },
   "drawbridge": {
     "enabled":        { "type": "bool", "readonly": true },

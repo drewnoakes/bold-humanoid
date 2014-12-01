@@ -6,7 +6,8 @@
   "mitecom": {
     "local-port": 18331,
     "remote-port": 18331,
-    "send-period-seconds": 0.1
+    "send-period-seconds": 0.1,
+    "max-player-data-age-millis": 5000
   },
   "drawbridge": {
     "enabled": false,

@@ -33,6 +33,7 @@ OpenTeamCommunicator::OpenTeamCommunicator(shared_ptr<BehaviourControl> behaviou
   d_localPort(Config::getStaticValue<int>("mitecom.local-port")),
   d_remotePort(Config::getStaticValue<int>("mitecom.remote-port")),
   d_sendPeriodSeconds(Config::getSetting<double>("mitecom.send-period-seconds")),
+  d_maxPlayerDataAgeMillis(Config::getSetting<int>("mitecom.max-player-data-age-millis")),
   d_lastBroadcast(0)
 {
   d_types.push_back(typeid(AgentFrameState));
@@ -187,7 +188,7 @@ void OpenTeamCommunicator::receiveData()
   }
 
   if (updated)
-    State::make<TeamState>(d_players);
+    updateStateObject();
 }
 
 void OpenTeamCommunicator::sendData(PlayerState& state)
@@ -220,6 +221,15 @@ void OpenTeamCommunicator::sendData(PlayerState& state)
   ASSERT(messageDataLength > 0);
 
   mitecom_broadcast(d_sock, d_remotePort, messageData.get(), messageDataLength);
+
+  updateStateObject();
+}
+
+void OpenTeamCommunicator::updateStateObject()
+{
+  // Remove players where data has not been heard for some time
+  d_players.erase(std::remove_if(d_players.begin(), d_players.end(),
+    [](PlayerState const& player) { return player.getAgeMillis() > d_maxPlayerDataAgeMillis->getValue(); }));
 
   State::make<TeamState>(d_players);
 }
