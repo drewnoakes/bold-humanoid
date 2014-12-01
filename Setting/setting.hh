@@ -7,6 +7,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/document.h>
 #include <typeindex>
+#include <rapidjson/prettywriter.h>
 
 #include "../PixelLabel/pixellabel.hh"
 #include "../util/Range.hh"
@@ -39,6 +40,7 @@ namespace bold
     virtual bool setValueFromJson(rapidjson::Value const* jsonValue) = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
+    virtual void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
 
@@ -186,6 +188,7 @@ namespace bold
     virtual bool tryParseJsonValue(rapidjson::Value const* jsonValue, T* parsedValue) const = 0;
     virtual void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, T const& value) const = 0;
     virtual void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, T const& value) const = 0;
+    virtual void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, T const& value) const = 0;
 
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer) const
     {
@@ -193,6 +196,11 @@ namespace bold
     }
 
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer) const
+    {
+      writeJsonValue(writer, getValue());
+    }
+
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const
     {
       writeJsonValue(writer, getValue());
     }

@@ -26,6 +26,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, int* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
     void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
 
@@ -69,6 +70,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, int* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, int const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
     void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
 
@@ -114,6 +116,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, double* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, double const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, double const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, double const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonMetadata(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
     void writeJsonMetadata(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonMetadataInternal(writer); }
 
@@ -154,6 +157,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, bool* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, bool const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, bool const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, bool const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
@@ -174,6 +178,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, Colour::hsvRange* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, Colour::hsvRange const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, Colour::hsvRange const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
@@ -214,6 +219,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, Range<double>* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Range<double> const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, Range<double> const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, Range<double> const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
@@ -237,6 +243,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, std::string* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::string const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, std::string const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, std::string const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
@@ -256,6 +263,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, std::vector<std::string>* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, std::vector<std::string> const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, std::vector<std::string> const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
@@ -279,6 +287,7 @@ namespace bold
     bool tryParseJsonValue(rapidjson::Value const* jsonValue, Colour::bgr* parsedValue) const override;
     void writeJsonValue(rapidjson::Writer<rapidjson::StringBuffer>& writer, Colour::bgr const& value) const override { writeJsonInternal(writer, value); }
     void writeJsonValue(rapidjson::Writer<WebSocketBuffer>& writer, Colour::bgr const& value) const override { writeJsonInternal(writer, value); }
+    void writeJsonValue(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer, Colour::bgr const& value) const override { writeJsonInternal(writer, value); }
 
   private:
     template<typename TBuffer>
