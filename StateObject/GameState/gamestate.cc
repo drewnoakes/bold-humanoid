@@ -9,6 +9,8 @@ GameState::GameState(char const* data)
 : d_receivedAt(Clock::getTimestamp())
 {
   static_assert(is_pod<GameStateMessage>::value, "Must be POD type");
+  static_assert(sizeof(PlayerInfo) == PlayerInfo::SIZE, "Must have advertised size");
+  static_assert(sizeof(TeamInfo) == TeamInfo::SIZE, "Must have advertised size");
   static_assert(sizeof(GameStateMessage) == GameStateMessage::SIZE, "Must have advertised size");
   std::copy(data, data + sizeof(GameStateMessage), reinterpret_cast<char*>(&d_data));
 }
