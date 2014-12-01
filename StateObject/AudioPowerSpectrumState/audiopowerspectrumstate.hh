@@ -13,6 +13,7 @@ namespace bold
     AudioPowerSpectrumState(double maxFrequency, std::vector<float> dbs);
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
     void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
 
     uint getIndexForFreqHz(double frequencyHz) const;

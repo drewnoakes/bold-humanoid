@@ -95,6 +95,7 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const { writeJsonInternal(writer); }
     void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const { writeJsonInternal(writer); }
+    void writeJson(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const { writeJsonInternal(writer); }
 
   private:
     template<typename TBuffer>
@@ -167,6 +168,7 @@ namespace bold
 
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
     void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
 
     std::vector<Average<Eigen::Vector2d>> const& getBallEstimates() const { return d_ballEstimates; }
     std::vector<Average<Eigen::Vector2d>> const& getTeammateEstimates() const { return d_keeperEstimates; }

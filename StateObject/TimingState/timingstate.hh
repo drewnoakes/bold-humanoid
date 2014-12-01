@@ -25,6 +25,7 @@ namespace bold
   public:
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
     void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const override { writeJsonInternal(writer); }
+    void writeJson(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
 
     std::shared_ptr<std::vector<EventTiming> const> getTimings() const { return d_eventTimings; }
 

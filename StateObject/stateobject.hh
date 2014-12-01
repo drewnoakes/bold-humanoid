@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <rapidjson/writer.h>
+
+#include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 #include "../util/websocketbuffer.hh"
 
@@ -16,6 +18,7 @@ namespace bold
   public:
     virtual void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const = 0;
     virtual void writeJson(rapidjson::Writer<WebSocketBuffer>& writer) const = 0;
+    virtual void writeJson(rapidjson::PrettyWriter<rapidjson::StringBuffer>& writer) const = 0;
 
     template<typename TBuffer, typename TState>
     static void writeJsonOrNull(rapidjson::Writer<TBuffer>& writer, std::shared_ptr<TState const> const& stateObject)
