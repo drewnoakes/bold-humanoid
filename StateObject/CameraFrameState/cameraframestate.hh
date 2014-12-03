@@ -131,10 +131,10 @@ namespace bold
         for (auto const& ray : d_occlusionRays)
         {
           writer.StartArray();
-          writer.Double(ray.near().x(), "%.3f");
-          writer.Double(ray.near().y(), "%.3f");
-          writer.Double(ray.far().x(), "%.3f");
-          writer.Double(ray.far().y(), "%.3f");
+          writer.Uint(ray.near().x());
+          writer.Uint(ray.near().y());
+          writer.Uint(ray.far().x());
+          writer.Uint(ray.far().y());
           writer.EndArray();
         }
       }
