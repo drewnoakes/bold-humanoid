@@ -1,12 +1,11 @@
 #include "drawbridgecomms.hh"
 
-#include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
-#include "../Agent/agent.hh"
 
+#include "../Agent/agent.hh"
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Config/config.hh"
-#include "../Debugger/debugger.hh"
+#include "../MessageCounter/messagecounter.hh"
 #include "../Option/option.hh"
 #include "../State/state.hh"
 #include "../StateObject/AgentFrameState/agentframestate.hh"
@@ -14,18 +13,16 @@
 #include "../StateObject/HardwareState/hardwarestate.hh"
 #include "../StateObject/OptionTreeState/optiontreestate.hh"
 #include "../StateObject/TimingState/timingstate.hh"
-#include "../StateObject/TeamState/teamstate.hh"
-#include "../UDPSocket/udpsocket.hh"
 #include "../Version/version.hh"
 
 using namespace bold;
 using namespace rapidjson;
 using namespace std;
 
-DrawBridgeComms::DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger)
+DrawBridgeComms::DrawBridgeComms(Agent* agent, shared_ptr<BehaviourControl> behaviourControl, shared_ptr<MessageCounter> messageCounter)
 : d_agent(agent),
   d_behaviourControl(behaviourControl),
-  d_debugger(debugger),
+  d_messageCounter(messageCounter),
   d_socket(make_unique<UDPSocket>())
 {
   int port = Config::getStaticValue<int>("drawbridge.udp-port");
@@ -61,8 +58,7 @@ void DrawBridgeComms::publish()
 
   d_socket->send(buffer.GetString(), (int)buffer.GetSize());
 
-  if (d_debugger)
-    d_debugger->notifySendingDrawbridgeMessage();
+  d_messageCounter->notifySendingDrawbridgeMessage();
 }
 
 // TODO include: Memory usage

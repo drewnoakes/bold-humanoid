@@ -6,7 +6,7 @@
 #include "../CM730Platform/CM730Linux/cm730linux.hh"
 #include "../CM730Snapshot/cm730snapshot.hh"
 #include "../Config/config.hh"
-#include "../DebugControl/debugcontrol.hh"
+#include "../LEDControl/ledcontrol.hh"
 #include "../MX28Snapshot/mx28snapshot.hh"
 #include "../State/state.hh"
 #include "../StateObject/BodyState/bodystate.hh"
@@ -23,9 +23,9 @@
 using namespace bold;
 using namespace std;
 
-MotionLoop::MotionLoop(shared_ptr<DebugControl> debugControl)
+MotionLoop::MotionLoop(shared_ptr<LEDControl> ledControl)
   : Loop("Motion Loop", SCHED_RR, -1),
-    d_debugControl(debugControl),
+    d_ledControl(ledControl),
     d_haveBody(false),
     d_readYet(false),
     d_staticHardwareStateUpdateNeeded(true)
@@ -327,7 +327,7 @@ void MotionLoop::onStep(ulong cycleNumber)
       d_bodyControl->clearModulation();
     }
 
-    if (d_debugControl->isDirty())
+    if (d_ledControl->isDirty())
     {
       if (d_haveBody)
       {
@@ -335,11 +335,11 @@ void MotionLoop::onStep(ulong cycleNumber)
         uchar parameters[bytesToWrite];
         int n = 0;
 
-        ushort forehead = d_debugControl->getForeheadColourShort();
-        ushort eye = d_debugControl->getEyeColourShort();
+        ushort forehead = d_ledControl->getForeheadColourShort();
+        ushort eye = d_ledControl->getEyeColourShort();
 
         parameters[n++] = CM730::ID_CM;
-        parameters[n++] = d_debugControl->getPanelLedByte();
+        parameters[n++] = d_ledControl->getPanelLedByte();
         parameters[n++] = CM730::getLowByte(forehead);
         parameters[n++] = CM730::getHighByte(forehead);
         parameters[n++] = CM730::getLowByte(eye);
@@ -349,12 +349,12 @@ void MotionLoop::onStep(ulong cycleNumber)
 
         d_cm730->syncWrite((uchar)CM730Table::LED_PANEL, bytesToWrite, 1, parameters);
 
-        d_debugControl->clearDirtyFlags();
+        d_ledControl->clearDirtyFlags();
         t.timeEvent("Write to CM730");
       }
       else
       {
-        d_debugControl->clearDirtyFlags();
+        d_ledControl->clearDirtyFlags();
         t.timeEvent("Write to CM730 (Dummy)");
       }
     }
@@ -638,13 +638,13 @@ shared_ptr<HardwareState const> MotionLoop::readHardwareStateFake(SequentialTime
   auto cm730State = new CM730Snapshot();
   cm730State->acc = Eigen::Vector3d(0, 0, 5);
   cm730State->accRaw = Eigen::Vector3i(512, 512, 768);
-  cm730State->eyeColor = d_debugControl->getEyeColour().toRgbUnitVector();
-  cm730State->foreheadColor = d_debugControl->getForeheadColour().toRgbUnitVector();
+  cm730State->eyeColor = d_ledControl->getEyeColour().toRgbUnitVector();
+  cm730State->foreheadColor = d_ledControl->getForeheadColour().toRgbUnitVector();
   cm730State->gyro = Eigen::Vector3d(0, 0, 0);
   cm730State->gyroRaw = Eigen::Vector3i(512, 512, 512);
-  cm730State->isLed2On = d_debugControl->isRedPanelLedLit();
-  cm730State->isLed3On = d_debugControl->isBluePanelLedLit();
-  cm730State->isLed4On = d_debugControl->isGreenPanelLedLit();
+  cm730State->isLed2On = d_ledControl->isRedPanelLedLit();
+  cm730State->isLed3On = d_ledControl->isBluePanelLedLit();
+  cm730State->isLed4On = d_ledControl->isGreenPanelLedLit();
   cm730State->isModeButtonPressed = false;
   cm730State->isPowered = true;
   cm730State->isStartButtonPressed = false;

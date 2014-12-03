@@ -5,14 +5,15 @@
 #include "../CameraModel/cameramodel.hh"
 #include "../CM730CommsModule/MX28HealthChecker/mx28healthchecker.hh"
 #include "../DataStreamer/datastreamer.hh"
-#include "../DebugControl/debugcontrol.hh"
 #include "../Debugger/debugger.hh"
 #include "../DrawBridgeComms/drawbridgecomms.hh"
 #include "../Drawing/drawing.hh"
 #include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../Kick/kick.hh"
+#include "../LEDControl/ledcontrol.hh"
 #include "../Localiser/localiser.hh"
+#include "../MessageCounter/messagecounter.hh"
 #include "../MotionLoop/motionloop.hh"
 #include "../MotionModule/HeadModule/headmodule.hh"
 #include "../MotionModule/MotionScriptModule/motionscriptmodule.hh"
@@ -71,7 +72,7 @@ Agent::Agent()
 
   d_buttonObserver = make_shared<ButtonObserver>();
 
-  auto debugControl = make_shared<DebugControl>();
+  auto debugControl = make_shared<LEDControl>();
   d_debugger = make_shared<Debugger>(this, d_behaviourControl, debugControl, d_voice, d_buttonObserver);
 
   // Prepare the motion schedule, that coordinates which motions are carried out
@@ -160,12 +161,13 @@ Agent::Agent()
 
   d_visualCortex = make_shared<VisualCortex>(d_camera, d_cameraModel, d_streamer, d_spatialiser, d_headModule);
 
-  d_gameStateReceiver = make_shared<GameStateReceiver>(d_debugger, d_voice);
+  d_messageCounter = make_shared<MessageCounter>();
+  d_gameStateReceiver = make_shared<GameStateReceiver>(d_messageCounter, d_voice);
 
   d_remoteControl = make_shared<RemoteControl>(this);
 
   if (Config::getStaticValue<bool>("drawbridge.enabled"))
-    d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_debugger);
+    d_drawBridgeComms = make_shared<DrawBridgeComms>(this, d_behaviourControl, d_messageCounter);
 
   d_debugger->update();
 

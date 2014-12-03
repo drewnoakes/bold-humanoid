@@ -8,10 +8,10 @@ namespace bold
   typedef unsigned char uchar;
   typedef unsigned short ushort;
 
-  class DebugControl
+  class LEDControl
   {
   public:
-    DebugControl()
+    LEDControl()
     : d_isPanelLedDirty(false),
       d_isEyeDirty(false),
       d_isForeheadDirty(false),

@@ -6,12 +6,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <memory>
 
-#include "gamecontrollertypes.hh"
 #include "../Agent/agent.hh"
-#include "../Config/config.hh"
-#include "../Debugger/debugger.hh"
+#include "../MessageCounter/messagecounter.hh"
 #include "../State/state.hh"
 #include "../StateObject/GameState/gamestate.hh"
 #include "../UDPSocket/udpsocket.hh"
@@ -21,8 +18,8 @@ using namespace bold;
 using namespace robocup;
 using namespace std;
 
-GameStateReceiver::GameStateReceiver(shared_ptr<Debugger> debugger, shared_ptr<Voice> voice)
-  : d_debugger(debugger),
+GameStateReceiver::GameStateReceiver(shared_ptr<MessageCounter> messageCounter, shared_ptr<Voice> voice)
+  : d_messageCounter(messageCounter),
     d_voice(voice),
     d_sendResponseMessages(Config::getSetting<bool>("game-controller.send-response-messages")),
     d_gameControllerPort(Config::getStaticValue<int>("game-controller.tcp-port")),
@@ -59,7 +56,7 @@ void GameStateReceiver::receive()
       ignoredLengths.insert(bytesRead);
       log::warning("GameStateReceiver::receive") << "First game controller message with invalid size (seen " << bytesRead << ")";
     }
-    d_debugger->notifyIgnoringUnrecognisedMessage();
+    d_messageCounter->notifyIgnoringUnrecognisedMessage();
   };
 
   auto logBadVersion = [this](uint8 observed, uint8 expected)
@@ -71,7 +68,7 @@ void GameStateReceiver::receive()
       ignoredVersions.insert(key);
       log::warning("GameStateReceiver::receive") << "First game controller message with wrong version (seen " << (int)observed << " but expecting " << (int)expected << ")";
     }
-    d_debugger->notifyIgnoringUnrecognisedMessage();
+    d_messageCounter->notifyIgnoringUnrecognisedMessage();
   };
 
   auto logBadLeague = [this](League observed, League expected)
@@ -83,7 +80,7 @@ void GameStateReceiver::receive()
       ignoredLeagues.insert(key);
       log::warning("GameStateReceiver::receive") << "First game controller message with wrong league (seen " << getLeagueName(observed) << " but expecting " << getLeagueName(expected) << ")";
     }
-    d_debugger->notifyIgnoringUnrecognisedMessage();
+    d_messageCounter->notifyIgnoringUnrecognisedMessage();
   };
 
   // Process all pending messages, looping until done
@@ -152,7 +149,7 @@ void GameStateReceiver::receive()
         log::warning("GameStateReceiver::receive") << "First game controller message with unexpected header '" << string(reinterpret_cast<char*>(data), 4) << "' (0x" << hex << observedHeader << dec << ") seen";
       }
 
-      d_debugger->notifyIgnoringUnrecognisedMessage();
+      d_messageCounter->notifyIgnoringUnrecognisedMessage();
     }
   }
 
@@ -239,7 +236,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
         << " when our team number is " << teamNumber;
     }
 
-    d_debugger->notifyIgnoringUnrecognisedMessage();
+    d_messageCounter->notifyIgnoringUnrecognisedMessage();
     return;
   }
 
@@ -251,7 +248,7 @@ void GameStateReceiver::processGameControllerInfoMessage(char const* data)
     observedOpponentTeamNumbers.insert(otherTeamNumber);
   }
 
-  d_debugger->notifyReceivedGameControllerMessage();
+  d_messageCounter->notifyReceivedGameControllerMessage();
 
   if (!d_receivedInfoMessageRecently)
   {

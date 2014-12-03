@@ -2,12 +2,13 @@
 
 #include "../Agent/agent.hh"
 #include "../BehaviourControl/behaviourcontrol.hh"
+#include "../LEDControl/ledcontrol.hh"
 #include "../State/state.hh"
 #include "../StateObject/CameraFrameState/cameraframestate.hh"
-#include "../StateObject/DebugState/debugstate.hh"
+#include "../StateObject/LEDState/ledstate.hh"
+#include "../StateObject/MessageCountState/messagecountstate.hh"
 #include "../StateObject/StationaryMapState/stationarymapstate.hh"
 #include "../StateObserver/ButtonObserver/buttonobserver.hh"
-#include "../stats/movingaverage.hh"
 #include "../Voice/voice.hh"
 
 using namespace bold;
@@ -17,19 +18,14 @@ using namespace std;
 
 Debugger::Debugger(
   Agent* agent,
-  shared_ptr<BehaviourControl> behaviourControl, shared_ptr<DebugControl> debugControl,
+  shared_ptr<BehaviourControl> behaviourControl, shared_ptr<LEDControl> ledControl,
   shared_ptr<Voice> voice, shared_ptr<ButtonObserver> buttonObserver)
 : d_agent(agent),
   d_behaviourControl(behaviourControl),
-  d_debugControl(debugControl),
+  d_ledControl(ledControl),
   d_voice(voice),
   d_leftButtonTracker(buttonObserver->track(Button::Left)),
-  d_showDazzle(false),
-  d_gameControllerMessageCount(0),
-  d_ignoredMessageCount(0),
-  d_sentTeamMessageCount(0),
-  d_receivedTeamMessageCount(0),
-  d_sentDrawbridgeMessageCount(0)
+  d_showDazzle(false)
 {}
 
 void Debugger::update()
@@ -40,26 +36,27 @@ void Debugger::update()
 
   auto const& stationaryMap = State::get<StationaryMapState>();
   auto const& cameraFrame = State::get<CameraFrameState>();
+  auto const& messageCount = State::get<MessageCountState>();
 
   if (stationaryMap)
   {
-    d_debugControl->setPanelLedStates(
+    d_ledControl->setPanelLedStates(
       /*red  */ stationaryMap->hasEnoughBallObservations(),
-      /*blue */ d_gameControllerMessageCount != 0,
+      /*blue */ messageCount->getGameControllerMessageCount() != 0,
       /*green*/ stationaryMap->getSatisfactoryGoalPostCount() != 0
     );
   }
   else if (cameraFrame)
   {
-    d_debugControl->setPanelLedStates(
+    d_ledControl->setPanelLedStates(
       /*red  */ cameraFrame->getBallObservation().hasValue(),
-      /*blue */ d_gameControllerMessageCount != 0,
+      /*blue */ messageCount->getGameControllerMessageCount() != 0,
       /*green*/ cameraFrame->getGoalObservations().size() != 0
     );
   }
   else
   {
-    d_debugControl->setPanelLedStates(false, false, false);
+    d_ledControl->setPanelLedStates(false, false, false);
   }
 
   //
@@ -134,26 +131,19 @@ void Debugger::update()
   };
 
   double seconds = Clock::getSeconds();
-  d_debugControl->setEyeColour(modulateColor(eyeColour, fabs(sin(seconds*2)) * 255));
-  d_debugControl->setForeheadColour(modulateColor(foreheadColour, fabs(sin(seconds*3)) * 255));
+  d_ledControl->setEyeColour(modulateColor(eyeColour, fabs(sin(seconds*2)) * 255));
+  d_ledControl->setForeheadColour(modulateColor(foreheadColour, fabs(sin(seconds*3)) * 255));
 
   //
-  // Update DebugState object
+  // Update state object
   //
 
-  State::make<DebugState>(
-    d_gameControllerMessageCount, d_ignoredMessageCount,
-    d_sentTeamMessageCount, d_receivedTeamMessageCount,
-    d_sentDrawbridgeMessageCount,
-    d_debugControl
-  );
-
-  // clear accumulators for next cycle
-  d_gameControllerMessageCount = 0;
-  d_ignoredMessageCount = 0;
-  d_sentTeamMessageCount = 0;
-  d_receivedTeamMessageCount = 0;
-  d_sentDrawbridgeMessageCount = 0;
+  State::make<LEDState>(
+    d_ledControl->getEyeColour(),
+    d_ledControl->getForeheadColour(),
+    d_ledControl->isRedPanelLedLit(),
+    d_ledControl->isGreenPanelLedLit(),
+    d_ledControl->isBluePanelLedLit());
 
   // Look for left button presses while paused
   if (d_leftButtonTracker->isPressedForMillis(20) && d_behaviourControl->getPlayerStatus() == PlayerStatus::Paused)

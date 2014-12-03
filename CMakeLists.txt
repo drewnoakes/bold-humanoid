@@ -352,6 +352,10 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  ./MessageCounter/messagecounter.cc
+)
+
+add_class(BOLDHUMANOID
   ./mitecom/mitecom-handler.cpp
   ./mitecom/mitecom-network.cpp
   ./mitecom/mitecom-roledecider.cpp

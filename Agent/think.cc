@@ -1,8 +1,5 @@
 #include "agent.hh"
 
-using namespace bold;
-using namespace std;
-
 #include "../BehaviourControl/behaviourcontrol.hh"
 #include "../Camera/camera.hh"
 #include "../Debugger/debugger.hh"
@@ -10,6 +7,7 @@ using namespace std;
 #include "../Drawing/drawing.hh"
 #include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../Localiser/localiser.hh"
+#include "../MessageCounter/messagecounter.hh"
 #include "../MotionTaskScheduler/motiontaskscheduler.hh"
 #include "../OptionTree/optiontree.hh"
 #include "../RoleDecider/roledecider.hh"
@@ -20,6 +18,9 @@ using namespace std;
 #include "../StateObject/TimingState/timingstate.hh"
 #include "../StateObserver/OpenTeamCommunicator/openteamcommunicator.hh"
 #include "../VisualCortex/visualcortex.hh"
+
+using namespace bold;
+using namespace std;
 
 void Agent::onLoopStart()
 {
@@ -106,10 +107,14 @@ void Agent::onStep(ulong cycleNumber)
   t.timeEvent("Remote Control");
 
   //
-  // Update LEDs on back, etc
+  // Update some per-think-cycle state objects
   //
+
   d_debugger->update();
   t.timeEvent("Update Debugger");
+
+  d_messageCounter->updateStateObject();
+  t.timeEvent("Update Message Count");
 
   //
   // Refresh MotionTaskState, if one is needed

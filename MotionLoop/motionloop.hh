@@ -15,7 +15,7 @@ namespace bold
   class BodyModel;
   class BulkRead;
   class CM730;
-  class DebugControl;
+  class LEDControl;
   class HardwareState;
   class SequentialTimer;
   class Voice;
@@ -23,7 +23,7 @@ namespace bold
   class MotionLoop : public Loop
   {
   public:
-    MotionLoop(std::shared_ptr<DebugControl> debugControl);
+    MotionLoop(std::shared_ptr<LEDControl> ledControl);
 
     void addMotionModule(std::shared_ptr<MotionModule> const& module);
     void addCommsModule(std::shared_ptr<CM730CommsModule> const& module);
@@ -47,7 +47,7 @@ namespace bold
     bool updateStaticHardwareState();
 
     std::unique_ptr<CM730> d_cm730;
-    std::shared_ptr<DebugControl> d_debugControl;
+    std::shared_ptr<LEDControl> d_ledControl;
     std::shared_ptr<BodyModel> d_bodyModel;
     std::shared_ptr<BodyControl> d_bodyControl;
     std::unique_ptr<BulkRead> d_dynamicBulkRead;

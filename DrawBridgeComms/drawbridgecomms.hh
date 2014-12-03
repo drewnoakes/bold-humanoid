@@ -9,12 +9,12 @@ namespace bold
 {
   class Agent;
   class BehaviourControl;
-  class Debugger;
+  class MessageCounter;
 
   class DrawBridgeComms
   {
   public:
-    DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<Debugger> debugger);
+    DrawBridgeComms(Agent* agent, std::shared_ptr<BehaviourControl> behaviourControl, std::shared_ptr<MessageCounter> messageCounter);
 
     void publish();
 
@@ -23,7 +23,7 @@ namespace bold
 
     Agent* d_agent;
     std::shared_ptr<BehaviourControl> d_behaviourControl;
-    std::shared_ptr<Debugger> d_debugger;
+    std::shared_ptr<MessageCounter> d_messageCounter;
     std::unique_ptr<UDPSocket> d_socket;
     std::string d_hostName;
   };

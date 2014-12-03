@@ -59,17 +59,17 @@ class CommsModule extends Module
         this.chart.addTimeSeries(this.gameSeries,   { strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 255, 0, 0.3)', lineWidth: 1 });
         this.chart.streamTo(this.canvas, /*delayMs*/ 0);
 
-        this.closeables.add(new data.Subscription<state.Debug>(
-            constants.protocols.debugState,
+        this.closeables.add(new data.Subscription<state.MessageCount>(
+            constants.protocols.messageCountState,
             {
-                onmessage: this.onDebugState.bind(this)
+                onmessage: this.onMessageCountState.bind(this)
             }
         ));
 
         this.closeables.add({ close: () => this.chart.stop() });
     }
 
-    private onDebugState(data: state.Debug)
+    private onMessageCountState(data: state.MessageCount)
     {
         var time = new Date().getTime();
 

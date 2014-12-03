@@ -9,7 +9,7 @@
 namespace bold
 {
   class Agent;
-  class Debugger;
+  class MessageCounter;
   template<typename> class Setting;
   class UDPSocket;
   class Voice;
@@ -17,14 +17,14 @@ namespace bold
   class GameStateReceiver
   {
   public:
-    GameStateReceiver(std::shared_ptr<Debugger> debugger, std::shared_ptr<Voice> voice);
+    GameStateReceiver(std::shared_ptr<MessageCounter> messageCounter, std::shared_ptr<Voice> voice);
 
     void receive();
 
   private:
     void processGameControllerInfoMessage(char const* data);
 
-    std::shared_ptr<Debugger> d_debugger;
+    std::shared_ptr<MessageCounter> d_messageCounter;
     std::shared_ptr<UDPSocket> d_socket;
     std::shared_ptr<Voice> d_voice;
     Setting<bool>* d_sendResponseMessages;

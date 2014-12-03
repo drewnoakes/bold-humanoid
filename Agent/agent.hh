@@ -22,6 +22,7 @@ namespace bold
   class HeadModule;
   class JamDetector;
   class Localiser;
+  class MessageCounter;
   class MotionLoop;
   class MotionScriptModule;
   class MotionTaskScheduler;
@@ -119,6 +120,7 @@ namespace bold
     std::shared_ptr<DrawBridgeComms> d_drawBridgeComms;
     std::shared_ptr<GameStateReceiver> d_gameStateReceiver;
     std::shared_ptr<Localiser> d_localiser;
+    std::shared_ptr<MessageCounter> d_messageCounter;
     std::shared_ptr<OptionTree> d_optionTree;
     std::shared_ptr<RemoteControl> d_remoteControl;
     std::shared_ptr<Spatialiser> d_spatialiser;

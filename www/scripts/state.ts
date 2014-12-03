@@ -106,22 +106,6 @@ export interface CameraFrame
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export interface Debug
-{
-    gameControllerMessages: number;
-    ignoredMessages: number;
-    sentTeamMessage: number;
-    receivedTeamMessages: number;
-    /** [r,g,b] as bytes */
-    eyeColor: number[];
-    /** [r,g,b] as bytes */
-    foreheadColor: number[];
-    /** [b,b,b] as booleans */
-    led: number[];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export interface PlayerData
 {
     penalty: string;
@@ -199,6 +183,28 @@ export interface LabelTeacher
 {
     selectedRange: {hue: number[]; sat: number[]; val: number[]};
     selectedDist: {hue: number[]; sat: number[]; val: number[]};
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface LED
+{
+    /** [r,g,b] as bytes */
+    eyeColor: number[];
+    /** [r,g,b] as bytes */
+    foreheadColor: number[];
+    /** [b,b,b] as booleans */
+    led: number[];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface MessageCount
+{
+    gameControllerMessages: number;
+    ignoredMessages: number;
+    sentTeamMessage: number;
+    receivedTeamMessages: number;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
