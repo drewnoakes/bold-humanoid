@@ -10,6 +10,14 @@
 
 namespace bold
 {
+  /** Base class for all state objects in the system.
+   *
+   * State objects model some kind of state, including but not limited to state about the hardware,
+   * behaviour, environment, game, team mates, etc.
+   *
+   * Instances are registered with the State class, and are immutable thereafter. This allows safe
+   * use of state objects across threads.
+   */
   class StateObject
   {
   protected:
