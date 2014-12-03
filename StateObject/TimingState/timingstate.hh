@@ -20,7 +20,7 @@ namespace bold
       d_averageFps(averageFps)
     {}
 
-    virtual ~TimingState() {}
+    virtual ~TimingState() = default;
 
   public:
     void writeJson(rapidjson::Writer<rapidjson::StringBuffer>& writer) const override { writeJsonInternal(writer); }
