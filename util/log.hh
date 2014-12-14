@@ -87,7 +87,7 @@ namespace bold
   class ConsoleLogAppender : public LogAppender
   {
   public:
-    virtual void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) override;
+    void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) override;
 
     static bool isStdOutRedirected();
     static bool isStdErrRedirected();
