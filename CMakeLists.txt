@@ -29,15 +29,16 @@ set(LIBWEBSOCKETDIR ${CMAKE_SOURCE_DIR}/libwebsockets)
 set(RAPIDJSONDIR ${CMAKE_SOURCE_DIR}/rapidjson)
 
 #
-## Compile libwebsockets as an external project
+## Compile libwebsockets
 #
-ExternalProject_Add(libwebsockets_lib
-  DOWNLOAD_COMMAND ""
-  SOURCE_DIR ${LIBWEBSOCKETDIR}
-  BINARY_DIR ${LIBWEBSOCKETDIR}
-  CMAKE_ARGS -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DLWS_WITHOUT_TESTAPPS=ON -DLWS_WITHOUT_CLIENT=ON -DLWS_WITHOUT_DAEMONIZE=ON -DLWS_WITH_SSL=OFF
-  INSTALL_COMMAND ""
-)
+option(LWS_WITHOUT_TESTAPPS ON)
+option(LWS_WITHOUT_CLIENT ON)
+option(LWS_WITHOUT_DAEMONIZE ON)
+option(LWS_WITHOUT_DEBUG ON)
+option(LWS_WITHOUT_EXTENSIONS ON)
+option(LWS_WITH_SSL OFF)
+option(LWS_IPV6 OFF)
+add_subdirectory(${LIBWEBSOCKETDIR})
 
 #
 ## Boldhumanoid sources
@@ -733,7 +734,7 @@ add_executable(boldhumanoid
 #
 ## Link executable to libraries
 #
-set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} turbojpeg opencv_core opencv_imgproc ssl crypto libwebsockets.a pthread rt asound fftw3f espeak z png)
+set(BOLDHUMANOID_LINK_LIBRARIES ${SigC++_LIBRARIES} websockets turbojpeg opencv_core opencv_imgproc ssl crypto pthread rt asound fftw3f espeak z png)
 
 target_link_libraries(boldhumanoid ${BOLDHUMANOID_LINK_LIBRARIES})
 
@@ -747,7 +748,7 @@ set_target_properties(boldhumanoid PROPERTIES COMPILE_FLAGS ${BOLDHUMANOID_COMPI
 #
 ## Target dependencies
 #
-add_dependencies(boldhumanoid libwebsockets_lib)
+add_dependencies(boldhumanoid ${LIBWEBSOCKETS_LIBRARIES_STATIC})
 add_dependencies(boldhumanoid_objects version)
 
 #
