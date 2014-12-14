@@ -13,15 +13,17 @@ using namespace std;
 LogLevel log::minLevel = LogLevel::Verbose;
 bool log::logGameState = false;
 
-vector<unique_ptr<LogAppender>> log::d_appenders;
+vector<shared_ptr<LogAppender>> log::d_appenders;
 
 log::~log()
 {
   if (!d_message)
     return;
 
+  string message = d_message->str();
+
   for (auto& appender : d_appenders)
-    appender->append(d_level, d_scope, d_message);
+    appender->append(d_level, d_scope, message);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,7 @@ void writeLevelShortName(ostream& o, bold::LogLevel level)
   }
 }
 
-void ConsoleLogAppender::append(LogLevel const& level, string scope, unique_ptr<ostringstream> const& message)
+void ConsoleLogAppender::append(LogLevel level, string const& scope, string const& message)
 {
   int fgColor = 39;
   int bgColor = 49;
@@ -135,7 +137,7 @@ void ConsoleLogAppender::append(LogLevel const& level, string scope, unique_ptr<
     if (scope.size())
       ostream << "[" << scope << "] ";
 
-    ostream << message->str() << endl;
+    ostream << message << endl;
   }
   else
   {
@@ -146,7 +148,7 @@ void ConsoleLogAppender::append(LogLevel const& level, string scope, unique_ptr<
       ostream << ccolor::fore::lightblue << "[" << scope << "] ";
 
     ostream << "\033[" << fgColor << ";" << bgColor << "m"
-      << message->str()
+      << message
       << "\033[00m" << endl;
   }
 }

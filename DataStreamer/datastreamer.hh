@@ -92,6 +92,33 @@ namespace bold
     std::string _ipAddress;
   };
 
+  struct LogMessage
+  {
+    LogLevel level;
+    std::string scope;
+    std::string message;
+  };
+
+  class WebSocketLogAppender : public LogAppender
+  {
+  public:
+    WebSocketLogAppender(libwebsocket_protocols* protocol);
+
+    void append(LogLevel level, std::string const& scope, std::string const& message) override;
+
+    void writeLogSyncJson(rapidjson::Writer<WebSocketBuffer>& writer);
+    static void writeJson(rapidjson::Writer<WebSocketBuffer>& writer, LogLevel level, std::string const& scope, std::string const& message);
+
+    size_t addSession(JsonSession* session);
+    size_t removeSession(JsonSession* session);
+
+  private:
+    libwebsocket_protocols* d_protocol;
+    std::vector<LogMessage> d_criticalMessages;
+    std::vector<JsonSession*> d_sessions;
+    std::mutex d_sessionsMutex;
+  };
+
   class DataStreamer
   {
   public:
@@ -132,6 +159,8 @@ namespace bold
     std::vector<JsonSession*> d_controlSessions;
     std::mutex d_controlSessionsMutex;
 
+    std::shared_ptr<WebSocketLogAppender> d_logAppender;
+
     std::multimap<std::string, JsonSession*> d_stateSessions;
     std::mutex d_stateSessionsMutex;
 
@@ -146,6 +175,7 @@ namespace bold
     int callback_http   (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
     int callback_camera (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
     int callback_control(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
+    int callback_log    (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
     int callback_state  (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
 
     static int _callback_camera(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
@@ -161,6 +191,11 @@ namespace bold
     static int _callback_control(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_control(context, wsi, reason, user, in, len);
+    }
+
+    static int _callback_log(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
+    {
+      return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_log(context, wsi, reason, user, in, len);
     }
 
     static int _callback_state(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)

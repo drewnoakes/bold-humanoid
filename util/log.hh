@@ -10,7 +10,7 @@ namespace bold
 {
   enum class LogLevel
   {
-    Trace,
+    Trace = 0,
     Verbose,
     Info,
     Warning,
@@ -20,7 +20,7 @@ namespace bold
   class LogAppender
   {
   public:
-    virtual void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) = 0;
+    virtual void append(LogLevel level, std::string const& scope, std::string const& message) = 0;
   };
 
   /** A very minimal logging framework to control console output.
@@ -43,10 +43,12 @@ namespace bold
     static bool logGameState;
 
     template<typename T,typename... Args>
-    static void addAppender(Args&&... args)
+    static std::shared_ptr<T> addAppender(Args&&... args)
     {
       static_assert(std::is_base_of<LogAppender,T>::value, "Type must implement LogAppender");
-      d_appenders.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+      const std::shared_ptr<T> ptr = std::make_shared<T>(std::forward<Args>(args)...);
+      d_appenders.push_back(ptr);
+      return ptr;
     }
 
     static log trace()   { return log(LogLevel::Trace); }
@@ -78,7 +80,7 @@ namespace bold
     }
 
   private:
-    static std::vector<std::unique_ptr<LogAppender>> d_appenders;
+    static std::vector<std::shared_ptr<LogAppender>> d_appenders;
     std::string d_scope;
     LogLevel d_level;
     std::unique_ptr<std::ostringstream> d_message;
@@ -87,7 +89,7 @@ namespace bold
   class ConsoleLogAppender : public LogAppender
   {
   public:
-    void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) override;
+    void append(LogLevel level, std::string const& scope, std::string const& message) override;
 
     static bool isStdOutRedirected();
     static bool isStdErrRedirected();

@@ -2,6 +2,78 @@
 
 // TODO support a data protocol that supports queries and updates via JSON, all over a single websocket protocol
 
+WebSocketLogAppender::WebSocketLogAppender(libwebsocket_protocols* protocol)
+  : d_protocol(protocol)
+{}
+
+void WebSocketLogAppender::append(LogLevel level, string const& scope, string const& message)
+{
+  if (level == LogLevel::Warning || level == LogLevel::Error)
+  {
+    d_criticalMessages.push_back({level, scope, message});
+  }
+
+  lock_guard<mutex> guard(d_sessionsMutex);
+
+  for (JsonSession* session : d_sessions)
+  {
+    WebSocketBuffer buffer;
+    Writer<WebSocketBuffer> writer(buffer);
+    writeJson(writer, level, scope, message);
+    session->enqueue(move(buffer), /*suppressLwsNotify*/ true);
+  }
+
+  libwebsocket_callback_on_writable_all_protocol(d_protocol);
+}
+
+size_t WebSocketLogAppender::addSession(JsonSession* session)
+{
+  lock_guard<mutex> guard(d_sessionsMutex);
+
+  d_sessions.push_back(session);
+
+  return d_sessions.size();
+}
+
+size_t WebSocketLogAppender::removeSession(JsonSession* session)
+{
+  lock_guard<mutex> guard(d_sessionsMutex);
+
+  d_sessions.erase(find(d_sessions.begin(), d_sessions.end(), session));
+
+  session->~JsonSession();
+
+  return d_sessions.size();
+}
+
+void WebSocketLogAppender::writeLogSyncJson(Writer<WebSocketBuffer>& writer)
+{
+  writer.StartArray();
+  {
+    for (auto const& msg : d_criticalMessages)
+      writeJson(writer, msg.level, msg.scope, msg.message);
+  }
+  writer.EndArray();
+}
+
+void WebSocketLogAppender::writeJson(Writer<WebSocketBuffer>& writer, LogLevel level, string const& scope, string const& message)
+{
+  writer.StartObject();
+  {
+    writer.String("lvl");
+    writer.Uint(static_cast<unsigned>(level));
+
+    writer.String("scope");
+    writer.String(scope.c_str());
+
+    writer.String("msg");
+    writer.String(message.c_str());
+  }
+  writer.EndObject();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   : hasClientChanged(),
     d_port(Config::getStaticValue<int>("round-table.tcp-port")),
@@ -29,19 +101,23 @@ DataStreamer::DataStreamer(shared_ptr<Camera> camera)
   // We have three special protocols: HTTP-only, Camera and Control.
   // These are followed by N other protocols, one per type of state in the system
 
-  unsigned protocolCount = 3 + State::stateTypeCount() + 1;
+  unsigned protocolCount = 4 + State::stateTypeCount() + 1;
 
   d_protocols = new libwebsocket_protocols[protocolCount];
 
-                   // name, callback, per-session-data-size, rx-buffer-size, no-buffer-all-partial-tx
-  d_protocols[0] = { "http-only",        DataStreamer::_callback_http,    0,                     0, 0 };
-  d_protocols[1] = { "camera-protocol",  DataStreamer::_callback_camera,  sizeof(CameraSession), 0, 0 };
-  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(JsonSession),   0, 0 };
+  //                 name,               callback,                        per-session-data-size, rx-buffer-size,
+  //                                                                                                 no-buffer-all-partial-tx
+  d_protocols[0] = { "http-only",        DataStreamer::_callback_http,    0,                     0,  0 };
+  d_protocols[1] = { "camera-protocol",  DataStreamer::_callback_camera,  sizeof(CameraSession), 0,  0 };
+  d_protocols[2] = { "control-protocol", DataStreamer::_callback_control, sizeof(JsonSession),   0,  0 };
+  d_protocols[3] = { "log-protocol",     DataStreamer::_callback_log,     sizeof(JsonSession),   0,  0 };
 
   d_controlProtocol = &d_protocols[2];
 
+  d_logAppender = log::addAppender<WebSocketLogAppender>(&d_protocols[3]);
+
   // One protocol per state
-  unsigned protocolIndex = 3;
+  unsigned protocolIndex = 4;
   for (shared_ptr<StateTracker> stateTracker : State::getTrackers())
   {
     d_protocols[protocolIndex] = { stateTracker->name().c_str(), DataStreamer::_callback_state, sizeof(JsonSession), 0, 0 };
