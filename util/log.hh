@@ -7,21 +7,6 @@
 
 namespace bold
 {
-  inline std::ostream& operator<<(std::ostream &stream, std::vector<std::string> const& strings)
-  {
-    stream <<  "[";
-    bool comma = false;
-    for (auto const& s : strings)
-    {
-      if (comma)
-        stream << ",";
-      comma = true;
-      stream << "\"" << s << "\"";
-    }
-    stream <<  "]";
-    return stream;
-  }
-
   enum class LogLevel
   {
     Trace,
@@ -86,4 +71,19 @@ namespace bold
     LogLevel d_level;
     std::unique_ptr<std::ostringstream> d_message;
   };
+
+  inline std::ostream& operator<<(std::ostream &stream, std::vector<std::string> const& strings)
+  {
+    stream <<  "[";
+    bool comma = false;
+    for (auto const& s : strings)
+    {
+      if (comma)
+        stream << ",";
+      comma = true;
+      stream << "\"" << s << "\"";
+    }
+    stream <<  "]";
+    return stream;
+  }
 }

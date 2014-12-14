@@ -114,7 +114,7 @@ log::~log()
   }
 
   auto& ostream = d_level == LogLevel::Error ? cerr : cout;
-  bool isRedirected = d_level == LogLevel::Error ? isStdErrRedirected (): isStdOutRedirected();
+  bool isRedirected = d_level == LogLevel::Error ? isStdErrRedirected() : isStdOutRedirected();
 
   if (isRedirected)
   {
