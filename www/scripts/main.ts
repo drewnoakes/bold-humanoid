@@ -25,6 +25,7 @@ import HistogramModule = require('modules/HistogramModule');
 import IMUModule = require('modules/IMUModule');
 import LoadModule = require('modules/LoadModule');
 import LocaliserModule = require('modules/LocaliserModule');
+import LogModule = require('modules/LogModule');
 import MotionScriptModule = require('modules/MotionScriptModule');
 import MotionTimingModule = require('modules/MotionTimingModule');
 import OptionTreeModule = require('modules/OptionTreeModule');
@@ -75,6 +76,7 @@ var loadUi = (settings?: Setting[]) =>
     moduleHost.register(new DrawbridgeModule());
     moduleHost.register(new ConfigModule());
     moduleHost.register(new StateDumpModule());
+    moduleHost.register(new LogModule());
 
     $('#module-container').hide().fadeIn();
     $('#loading-indicator').fadeOut(function() { $(this).remove(); });

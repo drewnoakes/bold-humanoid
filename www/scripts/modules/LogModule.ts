@@ -7,23 +7,24 @@
 import constants = require('constants');
 import data = require('data');
 import DOMTemplate = require('DOMTemplate');
+import ICloseable = require('ICloseable');
 import Module = require('Module');
+import state = require('state');
 
-var moduleTemplate = DOMTemplate.forId('state-dump-module-template');
+var moduleTemplate = DOMTemplate.forId('log-module-template');
 
-interface ICloseable
-{
-    close();
-}
+var MAX_ROW_COUNT = 2000;
 
-class StateDumpModule extends Module
+class LogModule extends Module
 {
     private subscription: ICloseable;
-    private textElement: HTMLDivElement;
+    private list: HTMLUListElement;
+    private scroller: HTMLDivElement;
+    private autoScroll: HTMLInputElement;
 
     constructor()
     {
-        super('state', 'state dump');
+        super('log', 'log');
     }
 
     public load(width: number)
@@ -32,55 +33,66 @@ class StateDumpModule extends Module
 
         this.element.appendChild(templateRoot);
 
-        this.textElement = <HTMLDivElement>templateRoot.querySelector('div.json-text');
+        this.list = <HTMLUListElement>templateRoot.querySelector('ul.log-messages');
+        this.scroller = <HTMLDivElement>templateRoot.querySelector('div.scroll-container');
+        this.autoScroll = <HTMLInputElement>document.getElementById('log-autoscroll');
 
-        var select = <HTMLSelectElement>templateRoot.querySelector('select');
-
-        var none = document.createElement('option');
-        none.value = '';
-        none.text = '(None)';
-        select.appendChild(none);
-
-        _.each(constants.allStateProtocols, stateName =>
-        {
-            var option = document.createElement('option');
-            option.value = stateName;
-            option.text = stateName;
-            select.appendChild(option);
-        });
-
-        select.addEventListener('change', () =>
-        {
-            var protocol = select.options[select.selectedIndex].value;
-
-            if (this.subscription)
-                this.subscription.close();
-
-            this.textElement.textContent = protocol ? 'Waiting for an update...' : '';
-
-            if (protocol !== '') {
-                this.subscription = new data.Subscription<any>(
-                    protocol,
-                    {
-                        onmessage: this.onState.bind(this)
-                    }
-                );
+        this.subscription = new data.Subscription<any>(
+            constants.protocols.log,
+            {
+                onmessage: this.onLogMessage.bind(this)
             }
+        );
+
+        templateRoot.querySelector('button.clear-log').addEventListener('click', () =>
+        {
+            while (this.list.childElementCount > 0)
+                this.list.removeChild(this.list.lastChild);
         });
     }
 
     public unload()
     {
-        delete this.textElement;
+        delete this.list;
+        delete this.scroller;
 
         if (this.subscription)
             this.subscription.close();
     }
 
-    private onState(data: any)
+    private onLogMessage(data: any)
     {
-        this.textElement.textContent = JSON.stringify(data, undefined, 2);
+        var appendMessage = (log: state.LogMessage) =>
+        {
+            while (this.list.childElementCount > MAX_ROW_COUNT)
+                this.list.removeChild(this.list.firstChild);
+
+            var li = document.createElement('li');
+            li.className = 'level-' + log.lvl;
+
+            var scope = document.createElement('span');
+            scope.textContent = log.scope;
+            li.appendChild(scope);
+
+            li.appendChild(document.createTextNode(log.msg));
+
+            this.list.appendChild(li);
+
+            // Scroll to bottom
+            if (this.autoScroll.checked)
+              this.scroller.scrollTop = this.list.offsetHeight - this.scroller.offsetHeight + 5;
+        };
+
+        if (data instanceof Array)
+        {
+            for (var i = 0; i < data.length; i++)
+                appendMessage(<state.LogMessage>data[i]);
+        }
+        else
+        {
+            appendMessage(<state.LogMessage>data);
+        }
     }
 }
 
-export = StateDumpModule;
+export = LogModule;

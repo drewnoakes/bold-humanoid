@@ -429,6 +429,7 @@ export var bodyStructure: IBodyPart = {
 export var protocols = {
     camera: 'camera-protocol',
     control: 'control-protocol',
+    log: 'log-protocol',
 
     // One per StateObject...
     agentFrameState: 'AgentFrame',
