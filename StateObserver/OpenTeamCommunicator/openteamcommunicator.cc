@@ -237,7 +237,9 @@ void OpenTeamCommunicator::updateStateObject()
         return true;
       }
       return false;
-    }));
+    }),
+    d_players.end()
+  );
 
   State::make<TeamState>(d_players);
 }
