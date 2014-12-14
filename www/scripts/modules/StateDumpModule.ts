@@ -7,14 +7,10 @@
 import constants = require('constants');
 import data = require('data');
 import DOMTemplate = require('DOMTemplate');
+import ICloseable = require('ICloseable');
 import Module = require('Module');
 
 var moduleTemplate = DOMTemplate.forId('state-dump-module-template');
-
-interface ICloseable
-{
-    close();
-}
 
 class StateDumpModule extends Module
 {

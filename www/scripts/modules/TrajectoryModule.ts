@@ -11,6 +11,7 @@ import Checkbox = require('controls/Checkbox');
 import data = require('data');
 import dom = require("util/domdomdom");
 import BodyFigure = require('controls/BodyFigure');
+import ICloseable = require('ICloseable');
 import Module = require('Module');
 import Select = require('controls/Select');
 import state = require('state');
@@ -35,11 +36,6 @@ var _yModScale = d3.scale.linear()
 var _yModScaleMirror = d3.scale.linear()
     .range([0, chartHeight])
     .domain([-100, 100]);
-
-interface ICloseable
-{
-    close();
-}
 
 enum Mode
 {
