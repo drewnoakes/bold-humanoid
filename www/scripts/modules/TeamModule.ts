@@ -35,6 +35,11 @@ class TeamModule extends Module
 
     private onTeamState(data: state.Team)
     {
+        util.clearChildren(this.element);
+
+        if (data.players.length === 0)
+            return;
+
         var newestTime = _.max<number>(_.map(data.players, player => player.updateTime));
         var myTeamNumber = _.findWhere<state.PlayerData>(data.players, player => player.isMe).team;
 
@@ -60,8 +65,6 @@ class TeamModule extends Module
                     + (newestTime - player.updateTime > 2000 ? 'old ' : '')
                     + (player.team === myTeamNumber ? 'teammate' : 'opponent')
             }));
-
-        util.clearChildren(this.element);
 
         this.element.appendChild(template.create(playerViewModels));
     }
