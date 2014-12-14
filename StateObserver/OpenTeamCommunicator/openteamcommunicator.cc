@@ -229,7 +229,15 @@ void OpenTeamCommunicator::updateStateObject()
 {
   // Remove players where data has not been heard for some time
   d_players.erase(std::remove_if(d_players.begin(), d_players.end(),
-    [this](PlayerState const& player) { return player.getAgeMillis() > d_maxPlayerDataAgeMillis->getValue(); }));
+    [this](PlayerState const& player)
+    {
+      if (player.getAgeMillis() > d_maxPlayerDataAgeMillis->getValue())
+      {
+        log::warning("OpenTeamCommunicator::updateStateObject") << "Dropping team mate data for player " << (int)player.uniformNumber << " with age " << player.getAgeMillis() << " ms";
+        return true;
+      }
+      return false;
+    }));
 
   State::make<TeamState>(d_players);
 }
