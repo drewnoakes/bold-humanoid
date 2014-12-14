@@ -143,12 +143,12 @@ namespace bold
     // libwebsocket callbacks
     //
 
-    int callback_http   (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_camera (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_control(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
-    int callback_state  (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void *user, void* in, size_t len);
+    int callback_http   (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
+    int callback_camera (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
+    int callback_control(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
+    int callback_state  (libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len);
 
-    static int _callback_camera(libwebsocket_context *context, libwebsocket *wsi, libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+    static int _callback_camera(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_camera(context, wsi, reason, user, in, len);
     }
@@ -158,12 +158,12 @@ namespace bold
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_http(context, wsi, reason, user, in, len);
     }
 
-    static int _callback_control(libwebsocket_context *context, libwebsocket *wsi, libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+    static int _callback_control(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_control(context, wsi, reason, user, in, len);
     }
 
-    static int _callback_state(libwebsocket_context *context, libwebsocket *wsi, libwebsocket_callback_reasons reason, void *user, void *in, size_t len)
+    static int _callback_state(libwebsocket_context* context, libwebsocket* wsi, libwebsocket_callback_reasons reason, void* user, void* in, size_t len)
     {
       return static_cast<DataStreamer*>(libwebsocket_context_user(context))->callback_state(context, wsi, reason, user, in, len);
     }

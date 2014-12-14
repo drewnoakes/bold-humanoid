@@ -2,7 +2,7 @@
 
 int DataStreamer::callback_camera(
   libwebsocket_context* context,
-  libwebsocket *wsi,
+  libwebsocket* wsi,
   libwebsocket_callback_reasons reason,
   void* session,
   void*,

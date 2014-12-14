@@ -7,7 +7,7 @@ using namespace std;
 PngCodec bold::CameraSession::pngCodec;
 JpegCodec bold::CameraSession::jpegCodec;
 
-CameraSession::CameraSession(libwebsocket_context* context, libwebsocket *wsi)
+CameraSession::CameraSession(libwebsocket_context* context, libwebsocket* wsi)
   : d_imgWaiting(false),
     d_imgSending(false),
     d_imageBytes(make_unique<vector<uchar>>()),
