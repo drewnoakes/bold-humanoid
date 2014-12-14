@@ -13,6 +13,19 @@ using namespace std;
 LogLevel log::minLevel = LogLevel::Verbose;
 bool log::logGameState = false;
 
+vector<unique_ptr<LogAppender>> log::d_appenders;
+
+log::~log()
+{
+  if (!d_message)
+    return;
+
+  for (auto& appender : d_appenders)
+    appender->append(d_level, d_scope, d_message);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void writeLogTimestamp(ostream& o, bool isConsole)
 {
   time_t now = time(0);
@@ -86,15 +99,14 @@ void writeLevelShortName(ostream& o, bold::LogLevel level)
   }
 }
 
-log::~log()
+void ConsoleLogAppender::append(LogLevel const& level, string scope, unique_ptr<ostringstream> const& message)
 {
-  if (!d_message)
-    return;
+  ASSERT(message);
 
   int fgColor = 39;
   int bgColor = 49;
 
-  switch (d_level)
+  switch (level)
   {
     case LogLevel::Trace:
       fgColor = 90;
@@ -113,41 +125,41 @@ log::~log()
       break;
   }
 
-  auto& ostream = d_level == LogLevel::Error ? cerr : cout;
-  bool isRedirected = d_level == LogLevel::Error ? isStdErrRedirected() : isStdOutRedirected();
+  auto& ostream = level == LogLevel::Error ? cerr : cout;
+  bool isRedirected = level == LogLevel::Error ? isStdErrRedirected() : isStdOutRedirected();
 
   if (isRedirected)
   {
     writeLogTimestamp(ostream, /*isConsole*/ false);
     writeGameState(ostream);
-    writeLevelShortName(ostream, d_level);
+    writeLevelShortName(ostream, level);
 
-    if (d_scope.size())
-      ostream << "[" << d_scope << "] ";
+    if (scope.size())
+      ostream << "[" << scope << "] ";
 
-    ostream << d_message->str() << endl;
+    ostream << message->str() << endl;
   }
   else
   {
     ostream << ccolor::fore::lightblack;
     writeLogTimestamp(ostream, /*isConsole*/ true);
 
-    if (d_scope.size())
-      ostream << ccolor::fore::lightblue << "[" << d_scope << "] ";
+    if (scope.size())
+      ostream << ccolor::fore::lightblue << "[" << scope << "] ";
 
     ostream << "\033[" << fgColor << ";" << bgColor << "m"
-            << d_message->str()
-            << "\033[00m" << endl;
+      << message->str()
+      << "\033[00m" << endl;
   }
 }
 
-bool log::isStdOutRedirected()
+bool ConsoleLogAppender::isStdOutRedirected()
 {
   static bool isStdOutRedirected = isatty(STDOUT_FILENO) == 0;
   return isStdOutRedirected;
 }
 
-bool log::isStdErrRedirected()
+bool ConsoleLogAppender::isStdErrRedirected()
 {
   static bool isStdErrRedirected = isatty(STDERR_FILENO) == 0;
   return isStdErrRedirected;

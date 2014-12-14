@@ -4,6 +4,7 @@
 #include <sstream>
 #include <memory>
 #include <vector>
+#include "memory.hh"
 
 namespace bold
 {
@@ -14,6 +15,12 @@ namespace bold
     Info,
     Warning,
     Error
+  };
+
+  class LogAppender
+  {
+  public:
+    virtual void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) = 0;
   };
 
   /** A very minimal logging framework to control console output.
@@ -35,6 +42,13 @@ namespace bold
     static LogLevel minLevel;
     static bool logGameState;
 
+    template<typename T,typename... Args>
+    static void addAppender(Args&&... args)
+    {
+      static_assert(std::is_base_of<LogAppender,T>::value, "Type must implement LogAppender");
+      d_appenders.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+    }
+
     static log trace()   { return log(LogLevel::Trace); }
     static log info()    { return log(LogLevel::Info); }
     static log verbose() { return log(LogLevel::Verbose); }
@@ -46,9 +60,6 @@ namespace bold
     static log verbose(std::string const& scope) { return log(scope, LogLevel::Verbose); }
     static log warning(std::string const& scope) { return log(scope, LogLevel::Warning); }
     static log error(std::string const& scope)   { return log(scope, LogLevel::Error); }
-
-    static bool isStdOutRedirected();
-    static bool isStdErrRedirected();
 
     log(log&& log)
     : d_scope(log.d_scope),
@@ -67,9 +78,19 @@ namespace bold
     }
 
   private:
+    static std::vector<std::unique_ptr<LogAppender>> d_appenders;
     std::string d_scope;
     LogLevel d_level;
     std::unique_ptr<std::ostringstream> d_message;
+  };
+
+  class ConsoleLogAppender : public LogAppender
+  {
+  public:
+    virtual void append(LogLevel const& level, std::string scope, std::unique_ptr<std::ostringstream> const& message) override;
+
+    static bool isStdOutRedirected();
+    static bool isStdErrRedirected();
   };
 
   inline std::ostream& operator<<(std::ostream &stream, std::vector<std::string> const& strings)

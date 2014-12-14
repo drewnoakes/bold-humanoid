@@ -66,7 +66,7 @@ vector<string> banners = {
 
 void printBanner()
 {
-  if (log::isStdOutRedirected())
+  if (ConsoleLogAppender::isStdOutRedirected())
   {
     cout << banners[rand() % banners.size()] << endl << endl;
   }
@@ -181,6 +181,8 @@ int main(int argc, char **argv)
       }
     }
   }
+
+  log::addAppender<ConsoleLogAppender>();
 
   if (verboseCount == 1)
     log::minLevel = LogLevel::Verbose;
