@@ -23,6 +23,8 @@ JsonSession::JsonSession(std::string protocolName, libwebsocket* wsi, libwebsock
 
 int JsonSession::write()
 {
+  lock_guard<mutex> guard(_queueMutex);
+
   // Fill the outbound pipe with frames of data
   while (!lws_send_pipe_choked(_wsi) && !_queue.empty())
   {
@@ -80,6 +82,8 @@ int JsonSession::write()
 
 void JsonSession::enqueue(WebSocketBuffer&& buffer, bool suppressLwsNotify)
 {
+  lock_guard<mutex> guard(_queueMutex);
+
   ASSERT(buffer.GetSize() != 0);
 
   auto queueSize = static_cast<unsigned>(_queue.size());

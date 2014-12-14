@@ -85,6 +85,7 @@ namespace bold
     libwebsocket_context* _context;
     /** A queue of websocket buffers containing messages to send for this session. */
     std::queue<WebSocketBuffer> _queue;
+    std::mutex _queueMutex;
     /** The number of bytes already sent of the front message in the queue. */
     int _bytesSent;
     unsigned _maxQueueSeen;
