@@ -101,8 +101,6 @@ void writeLevelShortName(ostream& o, bold::LogLevel level)
 
 void ConsoleLogAppender::append(LogLevel const& level, string scope, unique_ptr<ostringstream> const& message)
 {
-  ASSERT(message);
-
   int fgColor = 39;
   int bgColor = 49;
 
