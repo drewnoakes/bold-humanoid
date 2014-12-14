@@ -24,7 +24,7 @@ class LogModule extends Module
 
     constructor()
     {
-        super('log', 'log');
+        super('log', 'log', { fullScreen: true });
     }
 
     public load(width: number)
