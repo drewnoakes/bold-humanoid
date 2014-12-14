@@ -27,6 +27,7 @@ var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var combinemediaqueries = require('gulp-combine-media-queries');
 var del = require('del');
+var plumber = require('gulp-plumber');
 
 var distFolder = 'dist';
 var buildFolder = 'build';
@@ -35,6 +36,7 @@ var buildFolder = 'build';
 gulp.task('compile-sass', function ()
 {
     return gulp.src('styles/*.scss')
+        .pipe(plumber())
         .pipe(sass())
         .pipe(autoprefixer('last 2 versions', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
         .pipe(gulp.dest(buildFolder + '/styles'))
@@ -46,6 +48,7 @@ function compileTypeScript(moduleType, outFolder)
     return function()
     {
         return gulp.src('scripts/**/*.ts')
+            .pipe(plumber())
             .pipe(typescript({module: moduleType}))
             .pipe(gulp.dest(outFolder))
     };
