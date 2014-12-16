@@ -8,6 +8,7 @@ set(TEST_SOURCES
   BodyStateTests.cc
   Bounds2iTests.cc
   BoundsTests.cc
+  BufferReaderTests.cc
   CameraModelTests.cc
   CM730Tests.cc
   ColourTests.cc
