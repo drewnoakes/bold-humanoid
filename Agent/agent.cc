@@ -178,8 +178,7 @@ Agent::Agent()
   d_motionLoop->addMotionModule(d_walkModule);
   d_motionLoop->addMotionModule(d_headModule);
 
-  auto mx28HealthChecker = make_shared<MX28HealthChecker>(d_voice);
-  d_motionLoop->addCommsModule(mx28HealthChecker);
+  d_motionLoop->addCommsModule(make_shared<MX28HealthChecker>(d_voice));
 
   d_motionLoop->onReadFailure.connect([this](uint count) -> void {
     // If we were unable to read once during the last second, then we've lost
