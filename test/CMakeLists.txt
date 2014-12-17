@@ -9,6 +9,7 @@ set(TEST_SOURCES
   Bounds2iTests.cc
   BoundsTests.cc
   BufferReaderTests.cc
+  BufferWriterTests.cc
   CameraModelTests.cc
   CM730Tests.cc
   ColourTests.cc
