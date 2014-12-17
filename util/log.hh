@@ -64,7 +64,7 @@ namespace bold
     static log error(std::string const& scope)   { return log(scope, LogLevel::Error); }
 
     log(log&& log)
-    : d_scope(log.d_scope),
+    : d_scope(move(log.d_scope)),
       d_level(log.d_level),
       d_message(std::move(log.d_message))
     {}
