@@ -1,6 +1,5 @@
 #pragma once
 
-// <cstdint> provides types of guaranteed widths
 #include <cstdint>
 
 // TODO endianness as a type param? eg: BufferReader<LittleEndian>
@@ -9,15 +8,12 @@
 // TODO read string of N bytes (encoding?)
 // TODO test length and remaining
 
-
 namespace bold
 {
-  typedef unsigned char uchar;
-
   class BufferReader
   {
   public:
-    BufferReader(const uchar* ptr)
+    BufferReader(const char* ptr)
       : d_ptr(ptr)
     {}
 
@@ -60,6 +56,6 @@ namespace bold
     }
 
   private:
-    const uchar* d_ptr;
+    const char* d_ptr;
   };
 }
