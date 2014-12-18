@@ -21,7 +21,6 @@
 using namespace bold;
 using namespace Eigen;
 using namespace std;
-using namespace robocup;
 
 auto shouldYieldToOtherAttacker = []
 {

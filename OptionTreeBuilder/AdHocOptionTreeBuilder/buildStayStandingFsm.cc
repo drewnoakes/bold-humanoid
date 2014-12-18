@@ -10,7 +10,6 @@
 using namespace bold;
 using namespace Eigen;
 using namespace std;
-using namespace robocup;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildStayStandingFsm(Agent* agent, shared_ptr<Option> whileStandingOption)
 {

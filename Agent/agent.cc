@@ -8,6 +8,8 @@
 #include "../Debugger/debugger.hh"
 #include "../DrawBridgeComms/drawbridgecomms.hh"
 #include "../Drawing/drawing.hh"
+#include "../GameStateDecoder/GameStateDecoderVersion7/gamestatedecoderversion7.hh"
+#include "../GameStateDecoder/GameStateDecoderVersion8/gamestatedecoderversion8.hh"
 #include "../GameStateReceiver/gamestatereceiver.hh"
 #include "../ImageLabeller/imagelabeller.hh"
 #include "../Kick/kick.hh"
@@ -163,6 +165,8 @@ Agent::Agent()
 
   d_messageCounter = make_shared<MessageCounter>();
   d_gameStateReceiver = make_shared<GameStateReceiver>(d_messageCounter, d_voice);
+  d_gameStateReceiver->addDecoder(make_unique<GameStateDecoderVersion7>());
+  d_gameStateReceiver->addDecoder(make_unique<GameStateDecoderVersion8>());
 
   d_remoteControl = make_shared<RemoteControl>(this);
 

@@ -230,6 +230,11 @@ add_class(BOLDHUMANOID
 )
 
 add_class(BOLDHUMANOID
+  GameStateDecoder/GameStateDecoderVersion7/gamestatedecoderversion7.cc
+  GameStateDecoder/GameStateDecoderVersion8/gamestatedecoderversion8.cc
+)
+
+add_class(BOLDHUMANOID
   ./GameStateReceiver/gamestatereceiver.cc
 )
 

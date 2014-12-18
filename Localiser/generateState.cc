@@ -45,7 +45,7 @@ pair<Localiser::FilterState, double> Localiser::generateState()
       auto state = FilterState(x, y, 0, left ? 1.0 : -1.0);
       return make_pair(state, d_penaltyKidnapWeight->getValue());
     }
-    else if (gameState && gameState->getPlayMode() != robocup::PlayMode::PLAYING)
+    else if (gameState && gameState->getPlayMode() != PlayMode::PLAYING)
     {
       auto theta = -.5 * M_PI + d_thetaRng() / 4;
       auto state = FilterState(-std::abs(d_fieldXRng()), d_fieldYRng(), cos(theta), sin(theta));

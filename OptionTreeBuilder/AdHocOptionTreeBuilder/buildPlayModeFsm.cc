@@ -14,7 +14,6 @@
 
 using namespace bold;
 using namespace std;
-using namespace robocup;
 
 shared_ptr<FSMOption> AdHocOptionTreeBuilder::buildPlayModeFsm(Agent* agent, shared_ptr<Option> whilePlayingOption)
 {

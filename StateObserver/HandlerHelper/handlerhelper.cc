@@ -23,7 +23,7 @@ void HandlerHelper::observeTyped(shared_ptr<GameState const> const& state, Seque
 
   // Announce when our penalty period is over, in case the assistant referee has failed to unpenalise us
   auto const& myPlayerInfo = state->getMyPlayerInfo();
-  if (myPlayerInfo.hasPenalty() && myPlayerInfo.getPenaltyType() != robocup::PenaltyType::SUBSTITUTE)
+  if (myPlayerInfo.hasPenalty() && myPlayerInfo.getPenaltyType() != PenaltyType::SUBSTITUTE)
   {
     if (myPlayerInfo.getSecondsUntilPenaltyLifted() == 0)
     {
@@ -40,9 +40,9 @@ void HandlerHelper::observeTyped(shared_ptr<GameState const> const& state, Seque
   {
     switch (state->getPlayMode())
     {
-      case robocup::PlayMode::INITIAL:
-      case robocup::PlayMode::READY:
-      case robocup::PlayMode::SET:
+      case PlayMode::INITIAL:
+      case PlayMode::READY:
+      case PlayMode::SET:
         if (Clock::getSecondsSince(d_lastPauseAtGameStartTime) > 10)
         {
           d_voice->say("I am paused and the game is starting");

@@ -13,7 +13,6 @@
 
 using namespace bold;
 using namespace bold::Colour;
-using namespace robocup;
 using namespace std;
 
 Debugger::Debugger(

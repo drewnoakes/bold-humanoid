@@ -5,7 +5,6 @@
 #include "../StateObject/BehaviourControlState/behaviourcontrolstate.hh"
 
 using namespace bold;
-using namespace robocup;
 using namespace std;
 
 BehaviourControl::BehaviourControl(Agent& agent)
@@ -62,7 +61,7 @@ void BehaviourControl::setPlayerActivity(PlayerActivity activity)
   d_playerActivitySetThisCycle = true;
 }
 
-void BehaviourControl::setPlayMode(robocup::PlayMode playMode)
+void BehaviourControl::setPlayMode(PlayMode playMode)
 {
   if (playMode == d_playMode)
     return;
