@@ -3,7 +3,9 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <set>
 #include <vector>
+
 #include "memory.hh"
 
 namespace bold
@@ -63,6 +65,19 @@ namespace bold
     static log warning(std::string const& scope) { return log(scope, LogLevel::Warning); }
     static log error(std::string const& scope)   { return log(scope, LogLevel::Error); }
 
+    template<typename T, typename... Args>
+    static log warnOnce(std::set<T>& ignored, T value, Args... args)
+    {
+      if (ignored.find(value) == ignored.end())
+      {
+        ignored.insert(value);
+        auto l = log::warning(std::forward<Args>(args)...);
+        l << "(ONCE ONLY) ";
+        return std::move(l);
+      }
+      return log();
+    }
+
     log(log&& log)
     : d_scope(move(log.d_scope)),
       d_level(log.d_level),
@@ -80,6 +95,8 @@ namespace bold
     }
 
   private:
+    log() = default;
+
     static std::vector<std::shared_ptr<LogAppender>> d_appenders;
     std::string d_scope;
     LogLevel d_level;
