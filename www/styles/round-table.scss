@@ -1077,6 +1077,9 @@ div.module.log
       > li
       {
         padding: 1px 0;
+        -webkit-animation: fade-in 0.4s;
+        animation: fade-in 0.4s;
+        opacity: 1;
 
         &.level-4 { color: #F00; }
         &.level-3 { color: #F0F; }
@@ -1099,6 +1102,18 @@ div.module.log
       }
     }
   }
+}
+
+@-webkit-keyframes fade-in
+{
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+
+@keyframes fade-in
+{
+  from { opacity: 0 }
+  to   { opacity: 1 }
 }
 
 /********************************************************************/
