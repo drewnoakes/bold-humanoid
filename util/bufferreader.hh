@@ -56,6 +56,11 @@ namespace bold
       return val;
     }
 
+    void skip(size_t num)
+    {
+      d_ptr += num;
+    }
+
     size_t pos()
     {
       return d_ptr - d_start;
