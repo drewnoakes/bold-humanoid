@@ -14,7 +14,8 @@ namespace bold
   {
   public:
     BufferWriter(char* ptr)
-      : d_ptr(ptr)
+      : d_start(ptr),
+        d_ptr(ptr)
     {}
 
     void writeInt8(int8_t val)
@@ -51,7 +52,13 @@ namespace bold
       d_ptr += sizeof(uint32_t);
     }
 
+    size_t pos()
+    {
+      return d_ptr - d_start;
+    }
+
   private:
+    const char* const d_start;
     char* d_ptr;
   };
 }

@@ -14,7 +14,8 @@ namespace bold
   {
   public:
     BufferReader(const char* ptr)
-      : d_ptr(ptr)
+      : d_start(ptr),
+        d_ptr(ptr)
     {}
 
     int8_t readInt8()
@@ -55,7 +56,13 @@ namespace bold
       return val;
     }
 
+    size_t pos()
+    {
+      return d_ptr - d_start;
+    }
+
   private:
+    const char* const d_start;
     const char* d_ptr;
   };
 }
